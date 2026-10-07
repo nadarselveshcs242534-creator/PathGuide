@@ -21,7 +21,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
 
     try {
       const endpoint = isLogin ? '/api/login' : '/api/register';
-      const res = await axios.post(`http://localhost:8000${endpoint}`, formData);
+      const res = await axios.post(`https://cep-pathguide-backend.onrender.com${endpoint}`, formData);
       onLoginSuccess(res.data.email);
     } catch (err) {
       setError(err.response?.data?.detail || 'An error occurred. Please try again.');
