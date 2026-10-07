@@ -124,7 +124,7 @@ const CareerGuide = () => {
       // Pass chat history context to backend (exclude the current input from history payload)
       const historyPayload = activeSession.messages.map(m => ({ role: m.role, content: m.content }));
 
-      const response = await axios.post('http://localhost:8000/api/career-guidance', {
+      const response = await axios.post('https://cep-pathguide-backend.onrender.com/api/career-guidance', {
         prompt: currentInput,
         history: historyPayload
       });
@@ -136,7 +136,7 @@ const CareerGuide = () => {
     } catch (err) {
       updateSessionMessages(activeSessionId, [
         ...newMessages,
-        { role: 'ai', content: 'Connection error. Please ensure your FastAPI server is running.' }
+        { role: 'ai', content: 'Connection error. Please ensure your backend server is running.' }
       ]);
     } finally {
       setLoading(false);
