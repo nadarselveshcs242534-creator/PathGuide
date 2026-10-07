@@ -27,7 +27,7 @@ const Roadmap = ({ courses, setCourses }) => {
     setEvalFeedback(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/roadmap-eval', {
+      const response = await axios.post('https://cep-pathguide-backend.onrender.com/api/roadmap-eval', {
         courseTitle: course.title,
         currentModule: course.completedModules + 1,
         totalModules: course.totalModules,
