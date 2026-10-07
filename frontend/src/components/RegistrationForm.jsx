@@ -14,8 +14,8 @@ const RegistrationForm = ({ userProfile, onEnroll, onSearchCompleted }) => {
     const fetchCatalog = async () => {
       try {
         const [schRes, crsRes] = await Promise.all([
-          axios.get('http://localhost:8000/api/scholarships'),
-          axios.get('http://localhost:8000/api/courses')
+          axios.get('https://cep-pathguide-backend.onrender.com/api/scholarships'),
+          axios.get('https://cep-pathguide-backend.onrender.com/api/courses')
         ]);
         setScholarships(schRes.data.scholarships || []);
         setCourses(crsRes.data.courses || []);
@@ -46,7 +46,7 @@ const RegistrationForm = ({ userProfile, onEnroll, onSearchCompleted }) => {
         careerInterest: careerInterest
       };
 
-      const response = await axios.post('http://localhost:8000/api/students', payload);
+      const response = await axios.post('https://cep-pathguide-backend.onrender.com/api/students', payload);
       setScholarships(response.data.matches || []);
       setCourses(response.data.courses || []);
       setIsFiltered(true);
@@ -65,8 +65,8 @@ const RegistrationForm = ({ userProfile, onEnroll, onSearchCompleted }) => {
     setLoading(true);
     try {
       const [schRes, crsRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/scholarships'),
-        axios.get('http://localhost:8000/api/courses')
+        axios.get('https://cep-pathguide-backend.onrender.com/api/scholarships'),
+        axios.get('https://cep-pathguide-backend.onrender.com/api/courses')
       ]);
       setScholarships(schRes.data.scholarships || []);
       setCourses(crsRes.data.courses || []);
