@@ -538,3 +538,102 @@ body {
 .dropdown-list a:hover { text-decoration: underline; }
 .dropdown-meta { display: block; font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
 @media (max-width: 768px) { .demand-dropdown { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+/* =========================================
+   15. ABOUT US SECTION
+   ========================================= */
+.about-container { 
+  max-width: 1000px; 
+  margin: 0 auto; 
+  padding: 2rem 0; 
+  animation: fadeUp 0.4s ease; 
+}
+
+.about-header { 
+  text-align: center; 
+  margin-bottom: 4rem; 
+}
+
+.about-header h2 { 
+  font-size: 2.5rem; 
+  color: var(--text-primary); 
+  margin-bottom: 1rem; 
+  font-weight: 800; 
+  letter-spacing: -0.5px; 
+}
+
+.about-header p { 
+  font-size: 1.1rem; 
+  color: var(--text-secondary); 
+  line-height: 1.7; 
+  max-width: 800px; 
+  margin: 0 auto; 
+}
+
+.team-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+  gap: 2.5rem; 
+  justify-content: center; 
+}
+
+.team-card { 
+  background: var(--bg-surface); 
+  border: 1px solid var(--border-color); 
+  border-radius: var(--radius-md); 
+  padding: 3rem 2.5rem; 
+  box-shadow: var(--shadow-sm); 
+  transition: all var(--transition-normal); 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center; 
+}
+
+.team-card:hover { 
+  transform: translateY(-6px); 
+  box-shadow: var(--shadow-hover); 
+  border-color: var(--border-highlight); 
+}
+
+.team-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.team-name { 
+  font-size: 1.4rem; 
+  font-weight: 800; 
+  color: var(--text-primary); 
+  margin-bottom: 0.5rem; 
+  line-height: 1.2; 
+}
+
+.team-role { 
+  font-size: 0.95rem; 
+  color: var(--primary-color); 
+  font-weight: 700; 
+  margin-bottom: 0.25rem; 
+}
+
+.team-college {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.team-bio { 
+  font-size: 0.95rem; 
+  color: var(--text-secondary); 
+  line-height: 1.6; 
+}
