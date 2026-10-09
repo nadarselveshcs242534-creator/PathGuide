@@ -348,7 +348,7 @@ CRITICAL FORMATTING & BEHAVIOR RULES:
     try:
         chat_completion = await groq_client.chat.completions.create(
             messages=messages_payload,
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             temperature=0.6,
             max_tokens=4096,
             top_p=0.9
