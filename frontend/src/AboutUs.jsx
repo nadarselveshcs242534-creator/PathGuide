@@ -70,7 +70,7 @@ const AboutUs = () => {
             </div>
             <div>
               <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Portfolio:</strong>
-              <a href="https://omith-portfolio.com" target="_blank" rel="noreferrer" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.95rem' }}>https://omith-portfolio.com</a>
+              <a href="https://aboutomiththilakan.netlify.app/" target="_blank" rel="noreferrer" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.95rem' }}>https://aboutomiththilakan.netlify.app/</a>
             </div>
           </div>
         </div>
