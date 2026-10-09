@@ -58,7 +58,7 @@ const AboutUs = () => {
           <div style={{ marginTop: 'auto', width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left', wordBreak: 'break-word' }}>
             <div>
               <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Email:</strong>
-              <a href="mailto:omith.thilakan@gmail.com" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.95rem' }}>omith.thilakan@gmail.com</a>
+              <a href="mailto:omiththilakancs242537@gmail.com" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.95rem' }}>omiththilakancs242537@gmail.com</a>
             </div>
             <div>
               <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Contact:</strong> 
@@ -66,7 +66,7 @@ const AboutUs = () => {
             </div>
             <div>
               <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>LinkedIn:</strong>
-              <a href="https://www.linkedin.com/in/omith-thilakan" target="_blank" rel="noreferrer" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.95rem' }}>https://www.linkedin.com/in/omith-thilakan</a>
+              <a href="https://www.linkedin.com/in/omith-thilakan-3916b43a4/" target="_blank" rel="noreferrer" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.95rem' }}>https://www.linkedin.com/in/omith-thilakan-3916b43a4/</a>
             </div>
             <div>
               <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Portfolio:</strong>
