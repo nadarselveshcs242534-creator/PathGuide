@@ -111,6 +111,10 @@ def rank_items_by_ml(user_interest: str, items: list, text_field: str, top_n: in
 # ==========================================
 @app.post("/api/register")
 async def register_user(user: UserAuth):
+    # Enforce strictly @gmail.com validation
+    if not user.email.lower().endswith("@gmail.com"):
+        raise HTTPException(status_code=400, detail="Registration restricted: Only @gmail.com addresses are allowed.")
+
     existing_user = await db.users.find_one({"email": user.email.lower()})
     if existing_user:
         raise HTTPException(status_code=400, detail="This email is already registered.")
@@ -133,7 +137,7 @@ async def register_user(user: UserAuth):
     
     await db.users.insert_one(user_document)
     return {"message": "Account created successfully", "email": user.email.lower()}
-
+    
 @app.post("/api/login")
 async def login_user(user: UserAuth):
     db_user = await db.users.find_one({"email": user.email.lower()})
