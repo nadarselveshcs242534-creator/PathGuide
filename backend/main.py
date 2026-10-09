@@ -176,7 +176,7 @@ async def get_profile(email: str):
 @app.get("/api/courses")
 async def get_all_courses():
     cursor = db.courses.find({})
-    all_courses = await cursor.to_list(length=300)
+    all_courses = await cursor.to_list(length=1000)
     for c in all_courses:
         c['_id'] = str(c['_id'])
     return {"courses": all_courses}
@@ -184,7 +184,7 @@ async def get_all_courses():
 @app.get("/api/scholarships")
 async def get_all_scholarships():
     cursor = db.scholarships.find({})
-    all_scholarships = await cursor.to_list(length=300)
+    all_scholarships = await cursor.to_list(length=1000)
     for s in all_scholarships:
         s['_id'] = str(s['_id'])
     return {"scholarships": all_scholarships}
@@ -203,8 +203,8 @@ async def register_student_and_match(profile: StudentProfile):
     scholarships_cursor = db.scholarships.find({})
     courses_cursor = db.courses.find({})
     
-    all_scholarships = await scholarships_cursor.to_list(length=300)
-    all_courses = await courses_cursor.to_list(length=300)
+    all_scholarships = await scholarships_cursor.to_list(length=1000)
+    all_courses = await courses_cursor.to_list(length=1000)
     
     for s in all_scholarships:
         s['_id'] = str(s['_id'])
@@ -240,7 +240,9 @@ async def get_demand_trends():
         "Cybersecurity": ["cyber", "security", "hacking", "ethical hacking", "network", "firewall", "cryptography"],
         "Software Engineering": ["web", "full stack", "react", "python", "javascript", "developer", "backend", "frontend", "software"],
         "Data Science & Analytics": ["data", "analytics", "sql", "tableau", "statistics", "pandas", "bi"],
-        "Digital Marketing & SEO": ["marketing", "seo", "social media", "ads", "content"]
+        "Digital Marketing & SEO": ["marketing", "seo", "social media", "ads", "content"],
+        "Commerce & Finance": ["commerce", "finance", "accounting", "tax", "b.com", "bms", "bba"],
+        "Medical & Healthcare": ["medical", "mbbs", "nursing", "pharmacy", "health", "biology"]
     }
     
     counts = Counter()
@@ -265,6 +267,8 @@ async def get_demand_trends():
         "Software Engineering": "#8b5cf6",
         "Data Science & Analytics": "#f59e0b",
         "Digital Marketing & SEO": "#ef4444",
+        "Commerce & Finance": "#14b8a6",
+        "Medical & Healthcare": "#ec4899",
         "General Computing": "#64748b"
     }
 
@@ -288,11 +292,12 @@ async def get_career_guidance(chat: ChatRequest):
     scholarships_cursor = db.scholarships.find({})
     courses_cursor = db.courses.find({})
     
-    all_scholarships = await scholarships_cursor.to_list(length=200) 
-    all_courses = await courses_cursor.to_list(length=200)
+    all_scholarships = await scholarships_cursor.to_list(length=1000) 
+    all_courses = await courses_cursor.to_list(length=1000)
 
-    top_courses = rank_items_by_ml(chat.prompt, all_courses, "description", top_n=3)
-    top_scholarships = rank_items_by_ml(chat.prompt, all_scholarships, "description", top_n=3)
+    # Use ML Ranking to pull the most relevant 6 courses and scholarships for context
+    top_courses = rank_items_by_ml(chat.prompt, all_courses, "description", top_n=6)
+    top_scholarships = rank_items_by_ml(chat.prompt, all_scholarships, "description", top_n=6)
 
     rag_context = "DATABASE RETRIEVED RESOURCES (Use these to make recommendations):\n\n"
     rag_context += "Matched Courses in Database:\n"
@@ -304,18 +309,36 @@ async def get_career_guidance(chat: ChatRequest):
         docs = ", ".join(s.get('documentsRequired', []))
         rag_context += f"- **{s.get('name')}** | Provider: {s.get('provider')} | Desc: {s.get('description')} | Documents: {docs} | Link: {s.get('url', '#')}\n"
 
-    system_instruction = (
-        "You are an expert AI Career & Scholarship Navigator for university students in India. "
-        "Format your responses cleanly using Markdown formatting including headers, bolding, bullet lists, ASCII flowcharts/diagrams, and Markdown tables when comparing items or outlining step-by-step career roadmaps. "
-        "CRITICAL RAG MANDATE: At the end of every response, you MUST include a dedicated section titled '### 🎓 Recommended Database Courses & Scholarships' "
-        "referencing the retrieved courses and scholarships provided in your context. List their exact names, descriptions, required documents, and links so the student can apply directly.\n\n"
-        f"{rag_context}"
-    )
+    system_instruction = f"""
+You are the official AI Career & Financial Aid Advisor for "PathGuide" (A Community Engagement Project created by Selvesh Sathiyaseelan Nadar and Omith Thilakan, under mentor Ms. Jyoti Chauhan at Sheth L.U.J. and Sir M.V. College, Mumbai).
+
+ABOUT PATHGUIDE PLATFORM:
+1. Home & Demand Trends: Displays aggregated, real-time student search trends across in-demand fields.
+2. Find Opportunities: Employs an NLP Machine Learning engine that filters scholarships and courses according to Academic Year, Caste Category, and Annual Family Income.
+3. Roadmap & Progress: Allows students to enroll in course roadmaps and verify their modular learning milestones using AI RAG assessments.
+4. AI Career Guide: That's you! You deliver real-time career advising, domain comparisons, and direct opportunity discovery.
+
+LIVE DATABASE CATALOG (RAG RETRIEVED):
+{rag_context}
+
+CRITICAL FORMATTING & BEHAVIOR RULES:
+1. ALWAYS USE CLEAN MARKDOWN TABLES when comparing careers, domains, salaries, prerequisites, tools, or pros & cons.
+2. COURSE RECOMMENDATIONS & ROADMAP BUTTONS:
+   Whenever you suggest a course from our catalog, provide:
+   - The course name and provider.
+   - The external link using standard markdown: [Explore Course](URL)
+   - AN INTERACTIVE ROADMAP ACTION BUTTON using this EXACT syntax:
+     `[+ Add to Roadmap](#add-roadmap:Exact_Course_Name)`
+     (Replace Exact_Course_Name with the course's exact title, URL-encoded spaces are acceptable)
+3. CONTEXT AWARENESS: Read the entire conversation history. Remember what the student previously told you about their goals, year, category, or interests.
+4. TONE: Empathetic, encouraging, highly structured, and grounded in practical Indian academic realities. Never hallucinate courses not in the database if specifically asked for PathGuide courses.
+"""
     
     messages_payload = [{"role": "system", "content": system_instruction}]
     
-    for msg in chat.history:
-        if "Welcome to Digital Career Navigator" in msg.content:
+    # Send recent history to maintain context
+    for msg in chat.history[-8:]:
+        if "Welcome to PathGuide's Digital Career Navigator" in msg.content:
             continue
         role = "assistant" if msg.role == "ai" else "user"
         messages_payload.append({"role": role, "content": msg.content})
@@ -325,9 +348,10 @@ async def get_career_guidance(chat: ChatRequest):
     try:
         chat_completion = await groq_client.chat.completions.create(
             messages=messages_payload,
-            model="openai/gpt-oss-120b",
-            temperature=0.7,
-            max_tokens=4096
+            model="llama-3.3-70b-versatile",
+            temperature=0.6,
+            max_tokens=4096,
+            top_p=0.9
         )
         
         reply_text = chat_completion.choices[0].message.content
@@ -372,8 +396,8 @@ async def evaluate_roadmap_progress(req: RoadmapEvalRequest):
     1. Assess the depth of their submission. 
        - If they list 1-2 basic concepts -> Award 1 module.
        - If they list 3-5 distinct tools/concepts -> Award 2-3 modules.
-       - If they list an extensive syllabus (e.g., UI, data pane, calculations, graphs, dashboards, storytelling) -> Award 4-8 modules (up to the maximum {remaining_modules}).
-    2. 'skillVerified' MUST be a highly specific 3-to-6 word summary derived directly from their text (e.g., "Dashboards, Parameters & Storytelling"). Do not use generic phrases.
+       - If they list an extensive syllabus -> Award 4-8 modules (up to the maximum {remaining_modules}).
+    2. 'skillVerified' MUST be a highly specific 3-to-6 word summary derived directly from their text. Do not use generic phrases.
     3. Return ONLY a raw JSON object with these exact keys: "passed", "modulesToAdd", "skillVerified", "feedback", "nextQuestion".
 
     Example Output Format:
@@ -387,7 +411,6 @@ async def evaluate_roadmap_progress(req: RoadmapEvalRequest):
     """
 
     try:
-        # Crucial for json_object mode in Groq: The word "JSON" must be in the system prompt.
         chat_completion = await groq_client.chat.completions.create(
             messages=[
                 {
@@ -402,7 +425,6 @@ async def evaluate_roadmap_progress(req: RoadmapEvalRequest):
             response_format={"type": "json_object"}
         )
         
-        # Clean JSON in case the model ignored instructions and wrapped it
         raw_output = chat_completion.choices[0].message.content
         cleaned_json = re.sub(r"^```json\s*", "", raw_output, flags=re.MULTILINE)
         cleaned_json = re.sub(r"^```\s*", "", cleaned_json, flags=re.MULTILINE).strip()
@@ -413,10 +435,8 @@ async def evaluate_roadmap_progress(req: RoadmapEvalRequest):
         if awarded_modules < 1: awarded_modules = 1
         if awarded_modules > remaining_modules: awarded_modules = remaining_modules
 
-        # Enforce specificity
         skill = result.get("skillVerified", "Concepts Verified")
         if "Technical Concepts" in skill or len(skill.split()) > 8:
-            # Fallback to taking the first few words of their own input if the AI was lazy
             words = req.userAnswer.split()
             skill = " ".join(words[:5]) + "..." if len(words) > 5 else req.userAnswer
 
@@ -429,7 +449,6 @@ async def evaluate_roadmap_progress(req: RoadmapEvalRequest):
         }
     except Exception as e:
         print("Roadmap Eval Exception Caught:", str(e))
-        # Failsafe if the API crashes or rate limits
         return {
             "passed": True,
             "modulesToAdd": 1,
