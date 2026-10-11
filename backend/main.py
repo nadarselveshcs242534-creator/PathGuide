@@ -4,12 +4,13 @@ import certifi
 import bcrypt
 import json
 import re
+import time
 from collections import Counter
 from dotenv import load_dotenv
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from motor.motor_asyncio import AsyncIOMotorClient
 
 # Machine Learning Imports
@@ -21,7 +22,7 @@ import numpy as np
 from groq import AsyncGroq
 
 load_dotenv()
-app = FastAPI()
+app = FastAPI(title="PathGuide Backend API", version="2.1.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -40,6 +41,30 @@ db = client.digital_carrier
 
 # Groq AI Client
 groq_client = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"))
+
+# ==========================================
+# IN-MEMORY CACHE FOR PERFORMANCE OPTIMIZATION
+# ==========================================
+CATALOG_CACHE = {
+    "courses": [],
+    "scholarships": [],
+    "last_fetched": 0
+}
+CACHE_TTL_SECONDS = 300  # 5 minutes
+
+async def get_cached_catalog():
+    now = time.time()
+    if now - CATALOG_CACHE["last_fetched"] > CACHE_TTL_SECONDS or not CATALOG_CACHE["courses"]:
+        courses = await db.courses.find({}).to_list(length=1000)
+        scholarships = await db.scholarships.find({}).to_list(length=1000)
+        for c in courses:
+            c['_id'] = str(c['_id'])
+        for s in scholarships:
+            s['_id'] = str(s['_id'])
+        CATALOG_CACHE["courses"] = courses
+        CATALOG_CACHE["scholarships"] = scholarships
+        CATALOG_CACHE["last_fetched"] = now
+    return CATALOG_CACHE["courses"], CATALOG_CACHE["scholarships"]
 
 # ==========================================
 # PYDANTIC MODELS
@@ -71,9 +96,10 @@ class ChatMessage(BaseModel):
     content: str
 
 class ChatRequest(BaseModel):
-    prompt: str
+    prompt: str = Field(..., min_length=1, max_length=2000)
     history: list[ChatMessage] = []
-    userProfile: dict | None = None  # Added for personalized context
+    userEmail: str | None = None
+    userProfile: dict | None = None
 
 class RoadmapEvalRequest(BaseModel):
     courseTitle: str
@@ -81,11 +107,22 @@ class RoadmapEvalRequest(BaseModel):
     totalModules: int
     userAnswer: str
 
+class RoadmapSaveRequest(BaseModel):
+    userEmail: str
+    careerGoal: str
+    roadmap: dict
+
+class MilestoneToggleRequest(BaseModel):
+    userEmail: str
+    careerGoal: str
+    stageIndex: int
+    milestoneIndex: int
+    completed: bool
+
 # ==========================================
 # ML CLASSIFICATION & INTENT ENGINE
 # ==========================================
 def clean_text(text: str) -> str:
-    """Normalizes text for better TF-IDF matching."""
     return re.sub(r'[^a-zA-Z0-9\s]', '', str(text).lower())
 
 def rank_items_by_ml(user_interest: str, items: list, text_field: str, top_n: int = 5, min_score: float = 2.0):
@@ -107,8 +144,9 @@ def rank_items_by_ml(user_interest: str, items: list, text_field: str, top_n: in
         for i, item in enumerate(items):
             score = round(float(similarities[i]) * 100, 2)
             if score >= min_score:
-                item['ml_match_score'] = score
-                ranked_items.append(item)
+                item_copy = dict(item)
+                item_copy['ml_match_score'] = score
+                ranked_items.append(item_copy)
                 
         ranked_items = sorted(ranked_items, key=lambda x: x.get('ml_match_score', 0), reverse=True)
         return ranked_items[:top_n]
@@ -117,26 +155,46 @@ def rank_items_by_ml(user_interest: str, items: list, text_field: str, top_n: in
         return []
 
 def detect_query_intent(prompt: str) -> str:
-    """Fast heuristic check to decide what data to retrieve."""
     prompt_lower = prompt.lower()
-    scholarship_keywords = ['scholarship', 'fund', 'financial aid', 'money', 'grant', 'fee']
-    course_keywords = ['course', 'learn', 'tutorial', 'study', 'certif', 'roadmap', 'skill']
+    scholarship_kw = ['scholarship', 'fund', 'financial aid', 'grant', 'fee', 'stipend', 'money']
+    course_kw = ['course', 'learn', 'tutorial', 'study', 'certif', 'skill', 'class']
+    roadmap_kw = ['roadmap', 'plan', 'step by step', 'pathway', 'curriculum', 'how to become']
     
-    wants_scholarship = any(k in prompt_lower for k in scholarship_keywords)
-    wants_course = any(k in prompt_lower for k in course_keywords)
+    wants_sch = any(k in prompt_lower for k in scholarship_kw)
+    wants_crs = any(k in prompt_lower for k in course_kw)
+    wants_rdm = any(k in prompt_lower for k in roadmap_kw)
     
-    if wants_scholarship and not wants_course:
+    if wants_rdm:
+        return "roadmap"
+    if wants_sch and not wants_crs:
         return "scholarship"
-    elif wants_course and not wants_scholarship:
+    if wants_crs and not wants_sch:
         return "course"
     return "mixed"
+
+def evaluate_scholarship_eligibility(scholarship: dict, profile: dict | None) -> str:
+    """Categorizes verification status accurately to prevent misleading advice."""
+    if not profile or not profile.get("category") or not profile.get("familyIncome"):
+        return "Eligibility: Requires Verification (Profile incomplete)"
+    
+    eligible_cats = scholarship.get("eligibleCategories", [])
+    eligible_incomes = scholarship.get("eligibleIncomes", [])
+    
+    if not eligible_cats and not eligible_incomes:
+        return "Eligibility: Open / Generic Verification Required"
+        
+    cat_match = profile.get("category") in eligible_cats if eligible_cats else True
+    inc_match = profile.get("familyIncome") in eligible_incomes if eligible_incomes else True
+    
+    if cat_match and inc_match:
+        return "Eligibility: Appears Eligible (Matched by Category & Income)"
+    return "Eligibility: Further Verification Required (Criteria mismatch or unconfirmed)"
 
 # ==========================================
 # AUTHENTICATION & PROFILE ENDPOINTS
 # ==========================================
 @app.post("/api/register")
 async def register_user(user: UserAuth):
-    # Enforce strictly @gmail.com validation
     if not user.email.lower().endswith("@gmail.com"):
         raise HTTPException(status_code=400, detail="Registration restricted: Only @gmail.com addresses are allowed.")
 
@@ -162,7 +220,7 @@ async def register_user(user: UserAuth):
     
     await db.users.insert_one(user_document)
     return {"message": "Account created successfully", "email": user.email.lower()}
-    
+
 @app.post("/api/login")
 async def login_user(user: UserAuth):
     db_user = await db.users.find_one({"email": user.email.lower()})
@@ -204,19 +262,13 @@ async def get_profile(email: str):
 # ==========================================
 @app.get("/api/courses")
 async def get_all_courses():
-    cursor = db.courses.find({})
-    all_courses = await cursor.to_list(length=1000)
-    for c in all_courses:
-        c['_id'] = str(c['_id'])
-    return {"courses": all_courses}
+    courses, _ = await get_cached_catalog()
+    return {"courses": courses}
 
 @app.get("/api/scholarships")
 async def get_all_scholarships():
-    cursor = db.scholarships.find({})
-    all_scholarships = await cursor.to_list(length=1000)
-    for s in all_scholarships:
-        s['_id'] = str(s['_id'])
-    return {"scholarships": all_scholarships}
+    _, scholarships = await get_cached_catalog()
+    return {"scholarships": scholarships}
 
 # ==========================================
 # STUDENT MATCHING & DEMAND TRACKING
@@ -229,16 +281,7 @@ async def register_student_and_match(profile: StudentProfile):
             "query": profile.careerInterest.strip().lower()
         })
 
-    scholarships_cursor = db.scholarships.find({})
-    courses_cursor = db.courses.find({})
-    
-    all_scholarships = await scholarships_cursor.to_list(length=1000)
-    all_courses = await courses_cursor.to_list(length=1000)
-    
-    for s in all_scholarships:
-        s['_id'] = str(s['_id'])
-    for c in all_courses:
-        c['_id'] = str(c['_id'])
+    all_courses, all_scholarships = await get_cached_catalog()
 
     ranked_courses = rank_items_by_ml(profile.careerInterest, all_courses, "description", top_n=30, min_score=2.0)
     
@@ -314,84 +357,89 @@ async def get_demand_trends():
     return {"trends": trends}
 
 # ==========================================
-# RAG CAREER GUIDANCE CHATBOT
+# RAG CAREER GUIDANCE CHATBOT (SECTIONS 6, 8, 10, 11)
 # ==========================================
 @app.post("/api/career-guidance")
 async def get_career_guidance(chat: ChatRequest):
+    if not chat.prompt.strip():
+        raise HTTPException(status_code=400, detail="Prompt cannot be empty.")
+        
     intent = detect_query_intent(chat.prompt)
+    all_courses, all_scholarships = await get_cached_catalog()
+    
     top_courses = []
     top_scholarships = []
-    
     user_category = chat.userProfile.get("category") if chat.userProfile else None
 
-    # Retrieve & Rank based on intent
-    if intent in ["course", "mixed"]:
-        all_courses = await db.courses.find({}).to_list(length=1000)
-        top_courses = rank_items_by_ml(chat.prompt, all_courses, "description", top_n=6, min_score=2.0)
+    # Filtered Intent-aware retrieval
+    if intent in ["course", "roadmap", "mixed"]:
+        top_courses = rank_items_by_ml(chat.prompt, all_courses, "description", top_n=5, min_score=2.0)
 
     if intent in ["scholarship", "mixed"]:
-        # MongoDB Pre-Filtering based on Metadata
+        eligible_candidates = all_scholarships
         if user_category:
-            scholarship_query = {
-                "$or": [
-                    {"eligibleCategories": {"$in": [user_category]}},
-                    {"eligibleCategories": {"$size": 0}},
-                    {"eligibleCategories": {"$exists": False}}
-                ]
-            }
-        else:
-            scholarship_query = {}
-            
-        all_scholarships = await db.scholarships.find(scholarship_query).to_list(length=1000)
-        top_scholarships = rank_items_by_ml(chat.prompt, all_scholarships, "description", top_n=6, min_score=2.0)
+            eligible_candidates = [
+                s for s in all_scholarships
+                if not s.get("eligibleCategories") or user_category in s.get("eligibleCategories", [])
+            ]
+        top_scholarships = rank_items_by_ml(chat.prompt, eligible_candidates, "description", top_n=5, min_score=2.0)
 
-    # Build DB Context
-    rag_context = "DATABASE RETRIEVED RESOURCES (Use these to make recommendations):\n\n"
+    # Build Verified Source Citations context
+    rag_context = "DATABASE RETRIEVED RESOURCES:\n"
     if top_courses:
-        rag_context += "Matched Courses in Database:\n"
+        rag_context += "\n[VERIFIED COURSES]\n"
         for c in top_courses:
-            rag_context += f"- **{c.get('name')}** | Platform: {c.get('provider')} | Desc: {c.get('description')} | Link: {c.get('url', '#')}\n"
+            url = c.get('url', '#')
+            rag_context += f"- Title: {c.get('name')} | Platform: {c.get('provider')} | Desc: {c.get('description')} | Link: {url}\n"
     
     if top_scholarships:
-        rag_context += "\nMatched Scholarships in Database:\n"
+        rag_context += "\n[VERIFIED SCHOLARSHIPS]\n"
         for s in top_scholarships:
-            docs = ", ".join(s.get('documentsRequired', []))
-            rag_context += f"- **{s.get('name')}** | Provider: {s.get('provider')} | Desc: {s.get('description')} | Documents: {docs} | Link: {s.get('url', '#')}\n"
+            status = evaluate_scholarship_eligibility(s, chat.userProfile)
+            docs = ", ".join(s.get('documentsRequired', ['Marksheet', 'Income Proof']))
+            url = s.get('url', '#')
+            rag_context += f"- Title: {s.get('name')} | Provider: {s.get('provider')} | {status} | Required Docs: {docs} | Link: {url}\n"
             
     if not top_courses and not top_scholarships:
-        rag_context += "No highly relevant database matches found for this specific query."
+        rag_context += "No direct database records matched this query with sufficient relevance.\n"
 
-    # Build Personalized Student Context
-    student_context = ""
+    # Personalized Student Context
+    student_context = "STUDENT CONTEXT:"
     if chat.userProfile:
-        student_context = f"""
-STUDENT PROFILE (Do not ask for these details again):
-- Name: {chat.userProfile.get('fullName', 'Student')}
+        student_context += f"""
 - Academic Year: {chat.userProfile.get('academicYear', 'Not specified')}
 - Category: {chat.userProfile.get('category', 'Not specified')}
 - Family Income: {chat.userProfile.get('familyIncome', 'Not specified')}
 """
+    else:
+        student_context += " Profile not configured yet."
 
     system_instruction = f"""
-You are the official AI Career & Financial Aid Advisor for PathGuide.
+You are the AI Career & Financial Aid Advisor for PathGuide.
 
 {student_context}
 
-LIVE DATABASE CATALOG (RAG RETRIEVED):
 {rag_context}
 
-STRICT GROUNDING RULES:
-1. NO HALLUCINATION: You must NEVER invent, guess, or generate fake course names, scholarships, application links, deadlines, or fees. 
-2. EXCLUSIVE RECOMMENDATIONS: If a student asks for a course or scholarship, you may ONLY recommend items explicitly listed in the "LIVE DATABASE CATALOG" above.
-3. INSUFFICIENT DATA FALLBACK: If the retrieved catalog does not contain relevant courses or scholarships for their query, explicitly state: "I currently do not have verified opportunities for this specific request in the PathGuide database." Do not substitute with external internet links.
-4. CAREER ADVICE VS. RESOURCES: You may use your general knowledge to explain career concepts (e.g., "What is a Data Analyst?"), but you must rely solely on the database when recommending specific actionable resources.
-5. FORMATTING: Use Markdown tables for comparisons. When recommending a verified database course, append the exact interactive button: [+ Add to Roadmap](#add-roadmap:Exact_Course_Name).
+STRICT BEHAVIOR RULES:
+1. CITATIONS & TRANSPARENCY:
+   - For every course/scholarship recommended, state its Title, Relevance Explanation, and original official Markdown link [Official Portal](URL).
+   - For scholarships, explicitly state eligibility as: [Appears Eligible], [Requires Verification], or [Undetermined]. Never claim eligibility is guaranteed.
+   - NEVER invent or synthesize links, fees, or deadlines not present in the verified records.
+2. ROADMAP FORMATTING:
+   - When generating roadmaps, provide: Career Objective, Stages (Beginner -> Advanced), Key Skills, Recommended Courses (from Verified Courses above), Practical Projects, and Timelines.
+   - Append `[+ Add to Roadmap](#add-roadmap:Exact_Course_Name)` for verified course additions.
+3. CONVERSATIONAL REASONING:
+   - Present balanced alternatives rather than asserting a single "best" path.
+   - If user asks follow-up questions (e.g., "give me free options for this"), retain the previous career context.
+   - If database has no matches, state: "I currently do not have verified records in the database for this specific request" and provide high-level methodology instead of inventing courses.
 """
-    
+
     messages_payload = [{"role": "system", "content": system_instruction}]
     
-    for msg in chat.history[-8:]:
-        if "Welcome to PathGuide's Digital Career Navigator" in msg.content:
+    # Prune history to last 6 messages to stay within token limits and prevent context leakage
+    for msg in chat.history[-6:]:
+        if "Welcome to PathGuide" in msg.content:
             continue
         role = "assistant" if msg.role == "ai" else "user"
         messages_payload.append({"role": role, "content": msg.content})
@@ -402,22 +450,69 @@ STRICT GROUNDING RULES:
         chat_completion = await groq_client.chat.completions.create(
             messages=messages_payload,
             model="openai/gpt-oss-120b",
-            temperature=0.6,
-            max_tokens=4096,
+            temperature=0.4,
+            max_tokens=2500,
             top_p=0.9
         )
-        
-        reply_text = chat_completion.choices[0].message.content
-        return {"reply": reply_text}
-        
+        return {"reply": chat_completion.choices[0].message.content}
     except Exception as e:
         print("Groq API Error:", str(e))
         return {
-            "reply": "The AI Career Guide service is currently experiencing high demand. Please try asking your question again in a moment."
+            "reply": "PathGuide AI is experiencing temporary latency. Please verify your internet connection or rephrase your question."
         }
 
 # ==========================================
-# RAG-POWERED AI ROADMAP EVALUATOR (MULTI-MODULE JUMP)
+# STRUCTURED ROADMAP STORAGE & MANAGEMENT (SECTION 7)
+# ==========================================
+@app.post("/api/roadmaps/save")
+async def save_user_roadmap(req: RoadmapSaveRequest):
+    if not req.userEmail or not req.userEmail.endswith("@gmail.com"):
+        raise HTTPException(status_code=400, detail="Invalid student session.")
+        
+    record = {
+        "userEmail": req.userEmail.lower(),
+        "careerGoal": req.careerGoal,
+        "roadmap": req.roadmap,
+        "updatedAt": asyncio.get_event_loop().time()
+    }
+    
+    await db.user_roadmaps.update_one(
+        {"userEmail": req.userEmail.lower(), "careerGoal": req.careerGoal},
+        {"$set": record},
+        upsert=True
+    )
+    return {"message": "Roadmap progress saved successfully."}
+
+@app.get("/api/roadmaps/{email}")
+async def get_user_roadmaps(email: str):
+    if not email.endswith("@gmail.com"):
+        raise HTTPException(status_code=400, detail="Invalid session email.")
+    cursor = db.user_roadmaps.find({"userEmail": email.lower()})
+    roadmaps = await cursor.to_list(length=20)
+    for r in roadmaps:
+        r["_id"] = str(r["_id"])
+    return {"roadmaps": roadmaps}
+
+@app.post("/api/roadmaps/milestone")
+async def toggle_roadmap_milestone(req: MilestoneToggleRequest):
+    doc = await db.user_roadmaps.find_one({"userEmail": req.userEmail.lower(), "careerGoal": req.careerGoal})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Roadmap not found.")
+        
+    roadmap = doc.get("roadmap", {})
+    stages = roadmap.get("stages", [])
+    try:
+        stages[req.stageIndex]["milestones"][req.milestoneIndex]["completed"] = req.completed
+        await db.user_roadmaps.update_one(
+            {"_id": doc["_id"]},
+            {"$set": {"roadmap.stages": stages, "updatedAt": asyncio.get_event_loop().time()}}
+        )
+        return {"message": "Milestone updated."}
+    except IndexError:
+        raise HTTPException(status_code=400, detail="Invalid milestone coordinates.")
+
+# ==========================================
+# RAG EVALUATOR (EXISTING ROADMAP EVAL)
 # ==========================================
 @app.post("/api/roadmap-eval")
 async def evaluate_roadmap_progress(req: RoadmapEvalRequest):
@@ -427,84 +522,48 @@ async def evaluate_roadmap_progress(req: RoadmapEvalRequest):
         db_course = await db.courses.find_one({"name": {"$regex": regex_title, "$options": "i"}})
 
     course_name = db_course.get("name", req.courseTitle) if db_course else req.courseTitle
-    course_description = db_course.get("description", "Comprehensive industry curriculum") if db_course else f"Curriculum covering {req.courseTitle}"
-
+    course_desc = db_course.get("description", "Standard curriculum") if db_course else f"Curriculum for {req.courseTitle}"
     remaining_modules = req.totalModules - req.currentModule + 1
 
     prompt = f"""
-    You are an expert AI Course Evaluator.
-    You MUST respond in valid JSON format. Do NOT wrap the JSON in markdown blocks (no ```json).
+    You are an expert Course Evaluator. Respond ONLY in valid JSON.
+    Course: {course_name}
+    Curriculum: {course_desc}
+    Current Module: {req.currentModule} / {req.totalModules}
+    Answer: "{req.userAnswer}"
 
-    COURSE CONTEXT:
-    - Title: {course_name}
-    - Curriculum: {course_description}
-
-    STUDENT SUBMISSION:
-    - Current Module: {req.currentModule} out of {req.totalModules}
-    - Max Modules They Can Jump: {remaining_modules}
-    - What They Learned: "{req.userAnswer}"
-
-    EVALUATION RULES:
-    1. Assess the depth of their submission. 
-       - If they list 1-2 basic concepts -> Award 1 module.
-       - If they list 3-5 distinct tools/concepts -> Award 2-3 modules.
-       - If they list an extensive syllabus -> Award 4-8 modules (up to the maximum {remaining_modules}).
-    2. 'skillVerified' MUST be a highly specific 3-to-6 word summary derived directly from their text. Do not use generic phrases.
-    3. Return ONLY a raw JSON object with these exact keys: "passed", "modulesToAdd", "skillVerified", "feedback", "nextQuestion".
-
-    Example Output Format:
-    {{
-        "passed": true,
-        "modulesToAdd": 3,
-        "skillVerified": "Dashboards & Custom Calculations",
-        "feedback": "Incredible work! You've mastered multiple critical components of visualization in one go.",
-        "nextQuestion": "How would you optimize these dashboards for a mobile view?"
-    }}
+    Rules:
+    - Assess depth. Award 1 to {remaining_modules} modules.
+    - Provide concise 'skillVerified' (3-6 words).
+    - Keys: "passed", "modulesToAdd", "skillVerified", "feedback", "nextQuestion".
     """
 
     try:
         chat_completion = await groq_client.chat.completions.create(
             messages=[
-                {
-                    "role": "system", 
-                    "content": "You are a technical tutor. You evaluate student inputs dynamically. Respond in JSON format only."
-                },
+                {"role": "system", "content": "You evaluate student submissions. Respond in JSON only."},
                 {"role": "user", "content": prompt}
             ],
             model="llama-3.3-70b-versatile",
-            temperature=0.1, 
-            max_tokens=1024,
+            temperature=0.1,
+            max_tokens=600,
             response_format={"type": "json_object"}
         )
-        
-        raw_output = chat_completion.choices[0].message.content
-        cleaned_json = re.sub(r"^```json\s*", "", raw_output, flags=re.MULTILINE)
-        cleaned_json = re.sub(r"^```\s*", "", cleaned_json, flags=re.MULTILINE).strip()
-        
-        result = json.loads(cleaned_json)
-        
-        awarded_modules = int(result.get("modulesToAdd", 1))
-        if awarded_modules < 1: awarded_modules = 1
-        if awarded_modules > remaining_modules: awarded_modules = remaining_modules
-
-        skill = result.get("skillVerified", "Concepts Verified")
-        if "Technical Concepts" in skill or len(skill.split()) > 8:
-            words = req.userAnswer.split()
-            skill = " ".join(words[:5]) + "..." if len(words) > 5 else req.userAnswer
-
+        result = json.loads(chat_completion.choices[0].message.content)
+        modules = min(max(int(result.get("modulesToAdd", 1)), 1), remaining_modules)
         return {
             "passed": result.get("passed", True),
-            "modulesToAdd": awarded_modules,
-            "skillVerified": skill,
-            "feedback": result.get("feedback", "Excellent explanation of your learning milestones!"),
-            "nextQuestion": result.get("nextQuestion", "What practical exercise will you implement next?")
+            "modulesToAdd": modules,
+            "skillVerified": result.get("skillVerified", "Verified Module"),
+            "feedback": result.get("feedback", "Good progress recorded."),
+            "nextQuestion": result.get("nextQuestion", "What will you build next?")
         }
     except Exception as e:
-        print("Roadmap Eval Exception Caught:", str(e))
+        print("Roadmap Eval Fallback:", e)
         return {
             "passed": True,
             "modulesToAdd": 1,
-            "skillVerified": "Verified Submission",
-            "feedback": "Your progress has been successfully recorded to the server.",
-            "nextQuestion": "What is the key objective for your next module?"
+            "skillVerified": "Module Progress",
+            "feedback": "Your progress has been recorded.",
+            "nextQuestion": "Proceed to the next module."
         }
