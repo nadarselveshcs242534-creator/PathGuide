@@ -73,6 +73,7 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     prompt: str
     history: list[ChatMessage] = []
+    userProfile: dict | None = None  # Added for personalized context
 
 class RoadmapEvalRequest(BaseModel):
     courseTitle: str
@@ -81,14 +82,19 @@ class RoadmapEvalRequest(BaseModel):
     userAnswer: str
 
 # ==========================================
-# ML CLASSIFICATION ENGINE
+# ML CLASSIFICATION & INTENT ENGINE
 # ==========================================
-def rank_items_by_ml(user_interest: str, items: list, text_field: str, top_n: int = 5):
+def clean_text(text: str) -> str:
+    """Normalizes text for better TF-IDF matching."""
+    return re.sub(r'[^a-zA-Z0-9\s]', '', str(text).lower())
+
+def rank_items_by_ml(user_interest: str, items: list, text_field: str, top_n: int = 5, min_score: float = 2.0):
     if not items or not user_interest.strip():
-        return items[:top_n] if items else []
+        return []
         
-    corpus = [f"{item.get('name', '')} {item.get(text_field, '')}" for item in items]
-    corpus.append(user_interest)
+    clean_user_interest = clean_text(user_interest)
+    corpus = [f"{clean_text(item.get('name', ''))} {clean_text(item.get(text_field, ''))}" for item in items]
+    corpus.append(clean_user_interest)
     
     vectorizer = TfidfVectorizer(stop_words='english')
     try:
@@ -97,14 +103,33 @@ def rank_items_by_ml(user_interest: str, items: list, text_field: str, top_n: in
         item_vectors = tfidf_matrix[:-1]
         similarities = cosine_similarity(user_vector, item_vectors).flatten()
         
+        ranked_items = []
         for i, item in enumerate(items):
-            item['ml_match_score'] = round(float(similarities[i]) * 100, 2)
-            
-        ranked_items = [item for item in items if item.get('ml_match_score', 0) > 0]
+            score = round(float(similarities[i]) * 100, 2)
+            if score >= min_score:
+                item['ml_match_score'] = score
+                ranked_items.append(item)
+                
         ranked_items = sorted(ranked_items, key=lambda x: x.get('ml_match_score', 0), reverse=True)
         return ranked_items[:top_n]
-    except Exception:
+    except Exception as e:
+        print(f"ML Ranking Error: {e}")
         return []
+
+def detect_query_intent(prompt: str) -> str:
+    """Fast heuristic check to decide what data to retrieve."""
+    prompt_lower = prompt.lower()
+    scholarship_keywords = ['scholarship', 'fund', 'financial aid', 'money', 'grant', 'fee']
+    course_keywords = ['course', 'learn', 'tutorial', 'study', 'certif', 'roadmap', 'skill']
+    
+    wants_scholarship = any(k in prompt_lower for k in scholarship_keywords)
+    wants_course = any(k in prompt_lower for k in course_keywords)
+    
+    if wants_scholarship and not wants_course:
+        return "scholarship"
+    elif wants_course and not wants_scholarship:
+        return "course"
+    return "mixed"
 
 # ==========================================
 # AUTHENTICATION & PROFILE ENDPOINTS
@@ -215,7 +240,7 @@ async def register_student_and_match(profile: StudentProfile):
     for c in all_courses:
         c['_id'] = str(c['_id'])
 
-    ranked_courses = rank_items_by_ml(profile.careerInterest, all_courses, "description", top_n=30)
+    ranked_courses = rank_items_by_ml(profile.careerInterest, all_courses, "description", top_n=30, min_score=2.0)
     
     eligible_scholarships = [
         s for s in all_scholarships 
@@ -223,7 +248,7 @@ async def register_student_and_match(profile: StudentProfile):
         and profile.familyIncome in s.get("eligibleIncomes", [])
     ]
     
-    ranked_scholarships = rank_items_by_ml(profile.careerInterest, eligible_scholarships, "description", top_n=30)
+    ranked_scholarships = rank_items_by_ml(profile.careerInterest, eligible_scholarships, "description", top_n=30, min_score=2.0)
 
     return {
         "message": "AI matching complete",
@@ -293,54 +318,78 @@ async def get_demand_trends():
 # ==========================================
 @app.post("/api/career-guidance")
 async def get_career_guidance(chat: ChatRequest):
-    scholarships_cursor = db.scholarships.find({})
-    courses_cursor = db.courses.find({})
+    intent = detect_query_intent(chat.prompt)
+    top_courses = []
+    top_scholarships = []
     
-    all_scholarships = await scholarships_cursor.to_list(length=1000) 
-    all_courses = await courses_cursor.to_list(length=1000)
+    user_category = chat.userProfile.get("category") if chat.userProfile else None
 
-    # Use ML Ranking to pull the most relevant 6 courses and scholarships for context
-    top_courses = rank_items_by_ml(chat.prompt, all_courses, "description", top_n=6)
-    top_scholarships = rank_items_by_ml(chat.prompt, all_scholarships, "description", top_n=6)
+    # Retrieve & Rank based on intent
+    if intent in ["course", "mixed"]:
+        all_courses = await db.courses.find({}).to_list(length=1000)
+        top_courses = rank_items_by_ml(chat.prompt, all_courses, "description", top_n=6, min_score=2.0)
 
+    if intent in ["scholarship", "mixed"]:
+        # MongoDB Pre-Filtering based on Metadata
+        if user_category:
+            scholarship_query = {
+                "$or": [
+                    {"eligibleCategories": {"$in": [user_category]}},
+                    {"eligibleCategories": {"$size": 0}},
+                    {"eligibleCategories": {"$exists": False}}
+                ]
+            }
+        else:
+            scholarship_query = {}
+            
+        all_scholarships = await db.scholarships.find(scholarship_query).to_list(length=1000)
+        top_scholarships = rank_items_by_ml(chat.prompt, all_scholarships, "description", top_n=6, min_score=2.0)
+
+    # Build DB Context
     rag_context = "DATABASE RETRIEVED RESOURCES (Use these to make recommendations):\n\n"
-    rag_context += "Matched Courses in Database:\n"
-    for c in top_courses:
-        rag_context += f"- **{c.get('name')}** | Platform: {c.get('provider')} | Desc: {c.get('description')} | Link: {c.get('url', '#')}\n"
+    if top_courses:
+        rag_context += "Matched Courses in Database:\n"
+        for c in top_courses:
+            rag_context += f"- **{c.get('name')}** | Platform: {c.get('provider')} | Desc: {c.get('description')} | Link: {c.get('url', '#')}\n"
     
-    rag_context += "\nMatched Scholarships in Database:\n"
-    for s in top_scholarships:
-        docs = ", ".join(s.get('documentsRequired', []))
-        rag_context += f"- **{s.get('name')}** | Provider: {s.get('provider')} | Desc: {s.get('description')} | Documents: {docs} | Link: {s.get('url', '#')}\n"
+    if top_scholarships:
+        rag_context += "\nMatched Scholarships in Database:\n"
+        for s in top_scholarships:
+            docs = ", ".join(s.get('documentsRequired', []))
+            rag_context += f"- **{s.get('name')}** | Provider: {s.get('provider')} | Desc: {s.get('description')} | Documents: {docs} | Link: {s.get('url', '#')}\n"
+            
+    if not top_courses and not top_scholarships:
+        rag_context += "No highly relevant database matches found for this specific query."
+
+    # Build Personalized Student Context
+    student_context = ""
+    if chat.userProfile:
+        student_context = f"""
+STUDENT PROFILE (Do not ask for these details again):
+- Name: {chat.userProfile.get('fullName', 'Student')}
+- Academic Year: {chat.userProfile.get('academicYear', 'Not specified')}
+- Category: {chat.userProfile.get('category', 'Not specified')}
+- Family Income: {chat.userProfile.get('familyIncome', 'Not specified')}
+"""
 
     system_instruction = f"""
-You are the official AI Career & Financial Aid Advisor for "PathGuide" (A Community Engagement Project created by Selvesh Sathiyaseelan Nadar and Omith Thilakan, under mentor Ms. Jyoti Chauhan at Sheth L.U.J. and Sir M.V. College, Mumbai).
+You are the official AI Career & Financial Aid Advisor for PathGuide.
 
-ABOUT PATHGUIDE PLATFORM:
-1. Home & Demand Trends: Displays aggregated, real-time student search trends across in-demand fields.
-2. Find Opportunities: Employs an NLP Machine Learning engine that filters scholarships and courses according to Academic Year, Caste Category, and Annual Family Income.
-3. Roadmap & Progress: Allows students to enroll in course roadmaps and verify their modular learning milestones using AI RAG assessments.
-4. AI Career Guide: That's you! You deliver real-time career advising, domain comparisons, and direct opportunity discovery.
+{student_context}
 
 LIVE DATABASE CATALOG (RAG RETRIEVED):
 {rag_context}
 
-CRITICAL FORMATTING & BEHAVIOR RULES:
-1. ALWAYS USE CLEAN MARKDOWN TABLES when comparing careers, domains, salaries, prerequisites, tools, or pros & cons.
-2. COURSE RECOMMENDATIONS & ROADMAP BUTTONS:
-   Whenever you suggest a course from our catalog, provide:
-   - The course name and provider.
-   - The external link using standard markdown: [Explore Course](URL)
-   - AN INTERACTIVE ROADMAP ACTION BUTTON using this EXACT syntax:
-     `[+ Add to Roadmap](#add-roadmap:Exact_Course_Name)`
-     (Replace Exact_Course_Name with the course's exact title, URL-encoded spaces are acceptable)
-3. CONTEXT AWARENESS: Read the entire conversation history. Remember what the student previously told you about their goals, year, category, or interests.
-4. TONE: Empathetic, encouraging, highly structured, and grounded in practical Indian academic realities. Never hallucinate courses not in the database if specifically asked for PathGuide courses.
+STRICT GROUNDING RULES:
+1. NO HALLUCINATION: You must NEVER invent, guess, or generate fake course names, scholarships, application links, deadlines, or fees. 
+2. EXCLUSIVE RECOMMENDATIONS: If a student asks for a course or scholarship, you may ONLY recommend items explicitly listed in the "LIVE DATABASE CATALOG" above.
+3. INSUFFICIENT DATA FALLBACK: If the retrieved catalog does not contain relevant courses or scholarships for their query, explicitly state: "I currently do not have verified opportunities for this specific request in the PathGuide database." Do not substitute with external internet links.
+4. CAREER ADVICE VS. RESOURCES: You may use your general knowledge to explain career concepts (e.g., "What is a Data Analyst?"), but you must rely solely on the database when recommending specific actionable resources.
+5. FORMATTING: Use Markdown tables for comparisons. When recommending a verified database course, append the exact interactive button: [+ Add to Roadmap](#add-roadmap:Exact_Course_Name).
 """
     
     messages_payload = [{"role": "system", "content": system_instruction}]
     
-    # Send recent history to maintain context
     for msg in chat.history[-8:]:
         if "Welcome to PathGuide's Digital Career Navigator" in msg.content:
             continue
@@ -372,7 +421,6 @@ CRITICAL FORMATTING & BEHAVIOR RULES:
 # ==========================================
 @app.post("/api/roadmap-eval")
 async def evaluate_roadmap_progress(req: RoadmapEvalRequest):
-    # 1. RAG RETRIEVAL
     regex_title = re.escape(req.courseTitle.strip())
     db_course = await db.courses.find_one({"name": {"$regex": f"^{regex_title}$", "$options": "i"}})
     if not db_course:
