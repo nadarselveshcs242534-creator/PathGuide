@@ -293,8 +293,10 @@ const App = () => {
         {activeTab === 'roadmap' && <Roadmap courses={savedCourses} setCourses={setSavedCourses} />}
       </main>
 
-      {/* RENDER THE FLOATING SUPPORT WIDGET GLOBALLY */}
-      <WhatsAppSupport />
+      {/* Render Floating Support Widget only on Home, Find Opportunities, and About Us pages */}
+      {['home', 'user-window', 'about'].includes(activeTab) && (
+        <WhatsAppSupport />
+      )}
 
     </div>
   );
