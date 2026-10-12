@@ -1,8 +1,9 @@
 /* ==========================================================================
-   PATHGUIDE DESIGN SYSTEM - TRUE LIQUID GLASS & AURORA EMERALD THEME
-   - Primary: Vivid Emerald Green (#059669 / #10b981)
-   - Pair / Secondary: Electric Cyan & Aqua-Teal (#06b6d4 / #22d3ee)
-   - Dynamic Floating Liquid Canvas with Real Optical Frosted Glass Refraction
+   PATHGUIDE DESIGN SYSTEM - TRUE LIQUID GLASS & LAVENDER AMETHYST THEME
+   - Primary: Rich Lavender & Royal Violet (#8b5cf6 / #7c3aed / #a78bfa)
+   - Accent / Pair: Radiant Lilac, Amethyst & Periwinkle (#a855f7 / #c084fc / #6366f1)
+   - Dynamic Floating Liquid Mesh Canvas with Frosted Glass Refraction
+   - Fully Responsive Across All Devices (Mobile, Tablet, Desktop)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -13,44 +14,44 @@
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
 
-  /* Liquid Glass Palette - Light Theme */
-  --bg-main: #f0fdf4;
+  /* Liquid Glass Palette - Light Theme (Lavender & Lilac Porcelain) */
+  --bg-main: #f8f7ff;
   --bg-surface: rgba(255, 255, 255, 0.72);
   --bg-surface-solid: rgba(255, 255, 255, 0.88);
   --bg-surface-hover: rgba(255, 255, 255, 0.82);
 
-  --text-primary: #042a20;
-  --text-secondary: #0f4236;
-  --text-muted: #326456;
+  --text-primary: #1e1136;
+  --text-secondary: #3e2863;
+  --text-muted: #6b5b88;
 
-  --border-color: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.65);
   --border-highlight: rgba(255, 255, 255, 0.95);
-  --border-focus: #10b981;
+  --border-focus: #8b5cf6;
 
-  --primary-color: #059669;
-  --primary-hover: #047857;
-  --primary-light: rgba(16, 185, 129, 0.16);
-  --primary-glow: rgba(16, 185, 129, 0.4);
+  --primary-color: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --primary-light: rgba(139, 92, 246, 0.14);
+  --primary-glow: rgba(139, 92, 246, 0.4);
 
-  --secondary-color: #0891b2;
-  --secondary-hover: #0e7490;
-  --secondary-light: rgba(6, 182, 212, 0.16);
+  --secondary-color: #a855f7;
+  --secondary-hover: #9333ea;
+  --secondary-light: rgba(168, 85, 247, 0.14);
 
-  /* Aurora Emerald to Cyan/Blue Liquid Gradient */
-  --accent-gradient: linear-gradient(135deg, #059669 0%, #10b981 32%, #06b6d4 68%, #0284c7 100%);
-  --accent-gradient-hover: linear-gradient(135deg, #047857 0%, #059669 32%, #0891b2 68%, #0369a1 100%);
+  /* Aurora Lavender to Lilac/Periwinkle Liquid Gradient */
+  --accent-gradient: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 32%, #a855f7 68%, #c084fc 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #6d28d9 0%, #7c3aed 32%, #9333ea 68%, #a855f7 100%);
 
   --success-color: #10b981;
   --danger-color: #ef4444;
   --warning-color: #f59e0b;
 
   /* True Liquid Glass Specular Shadows */
-  --glass-shadow: 0 10px 35px 0 rgba(4, 47, 36, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 2px 0 rgba(16, 185, 129, 0.08);
-  --glass-shadow-hover: 0 20px 45px -8px rgba(4, 47, 36, 0.18), 0 0 30px rgba(16, 185, 129, 0.35), inset 0 1px 2px 0 rgba(255, 255, 255, 0.95);
-  --shadow-sm: 0 2px 8px rgba(4, 47, 36, 0.06);
-  --shadow-md: 0 8px 24px -4px rgba(4, 47, 36, 0.1);
-  --shadow-lg: 0 18px 36px -6px rgba(4, 47, 36, 0.14);
-  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.4);
+  --glass-shadow: 0 10px 35px 0 rgba(49, 16, 92, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 2px 0 rgba(139, 92, 246, 0.08);
+  --glass-shadow-hover: 0 20px 45px -8px rgba(49, 16, 92, 0.18), 0 0 30px rgba(139, 92, 246, 0.35), inset 0 1px 2px 0 rgba(255, 255, 255, 0.95);
+  --shadow-sm: 0 2px 8px rgba(49, 16, 92, 0.05);
+  --shadow-md: 0 8px 24px -4px rgba(49, 16, 92, 0.09);
+  --shadow-lg: 0 18px 36px -6px rgba(49, 16, 92, 0.14);
+  --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.4);
 
   --radius-sm: 12px;
   --radius-md: 20px;
@@ -61,39 +62,39 @@
   --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Dark Theme Overlay (Obsidian Emerald & Neon Cyan Liquid Glass) */
+/* Dark Theme Overlay (Obsidian Amethyst & Luminous Lavender Liquid Glass) */
 [data-theme="dark"] {
-  --bg-main: #04120e;
-  --bg-surface: rgba(6, 26, 20, 0.72);
-  --bg-surface-solid: rgba(8, 34, 26, 0.88);
-  --bg-surface-hover: rgba(12, 42, 33, 0.82);
+  --bg-main: #0d0a1a;
+  --bg-surface: rgba(22, 16, 40, 0.72);
+  --bg-surface-solid: rgba(28, 20, 50, 0.88);
+  --bg-surface-hover: rgba(35, 25, 62, 0.82);
 
-  --text-primary: #f0fdf4;
-  --text-secondary: #ccfbf1;
-  --text-muted: #99f6e4;
+  --text-primary: #f5f3ff;
+  --text-secondary: #ddd6fe;
+  --text-muted: #a78bfa;
 
-  --border-color: rgba(52, 211, 153, 0.22);
-  --border-highlight: rgba(255, 255, 255, 0.28);
-  --border-focus: #34d399;
+  --border-color: rgba(167, 139, 250, 0.22);
+  --border-highlight: rgba(255, 255, 255, 0.25);
+  --border-focus: #c084fc;
 
-  --primary-color: #34d399;
-  --primary-hover: #10b981;
-  --primary-light: rgba(52, 211, 153, 0.2);
-  --primary-glow: rgba(52, 211, 153, 0.5);
+  --primary-color: #a78bfa;
+  --primary-hover: #8b5cf6;
+  --primary-light: rgba(167, 139, 250, 0.2);
+  --primary-glow: rgba(167, 139, 250, 0.5);
 
-  --secondary-color: #22d3ee;
-  --secondary-hover: #06b6d4;
-  --secondary-light: rgba(34, 211, 238, 0.2);
+  --secondary-color: #c084fc;
+  --secondary-hover: #e879f9;
+  --secondary-light: rgba(192, 132, 252, 0.2);
 
-  --accent-gradient: linear-gradient(135deg, #10b981 0%, #34d399 32%, #22d3ee 68%, #38bdf8 100%);
-  --accent-gradient-hover: linear-gradient(135deg, #059669 0%, #10b981 32%, #06b6d4 68%, #0284c7 100%);
+  --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 32%, #c084fc 68%, #e879f9 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 32%, #a855f7 68%, #c084fc 100%);
 
-  --glass-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 2px 0 rgba(52, 211, 153, 0.15);
-  --glass-shadow-hover: 0 20px 48px -8px rgba(0, 0, 0, 0.75), 0 0 35px rgba(52, 211, 153, 0.45), inset 0 1px 2px 0 rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 2px 0 rgba(167, 139, 250, 0.15);
+  --glass-shadow-hover: 0 20px 48px -8px rgba(0, 0, 0, 0.75), 0 0 35px rgba(167, 139, 250, 0.45), inset 0 1px 2px 0 rgba(255, 255, 255, 0.35);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.55);
   --shadow-lg: 0 18px 36px -6px rgba(0, 0, 0, 0.7);
-  --shadow-glow: 0 0 35px rgba(52, 211, 153, 0.5);
+  --shadow-glow: 0 0 35px rgba(167, 139, 250, 0.5);
 }
 
 /* --------------------------------------------------------------------------
@@ -107,6 +108,8 @@
 
 html {
   scroll-behavior: smooth;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 body {
@@ -115,25 +118,21 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
   transition: background-color var(--transition-normal), color var(--transition-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
-  overflow-x: hidden;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   letter-spacing: -0.02em;
 }
 
 /* --------------------------------------------------------------------------
-   3. DYNAMIC AMBIENT LIQUID CANVAS (FLOWING ORBS ENGINE)
+   3. DYNAMIC AMBIENT LIQUID CANVAS (LAVENDER ORBS ENGINE)
    These floating blobs move continuously in the background, refracting
    through the frosted glass cards to create true liquid glassmorphism!
    -------------------------------------------------------------------------- */
@@ -156,170 +155,112 @@ h6 {
   will-change: transform;
 }
 
+/* Lavender & Violet Primary Orb */
 .blob-1 {
-  width: 550px;
-  height: 550px;
-  top: -120px;
-  left: -100px;
-  background: radial-gradient(circle, #10b981 0%, rgba(16, 185, 129, 0) 70%);
+  width: clamp(350px, 45vw, 550px);
+  height: clamp(350px, 45vw, 550px);
+  top: -100px;
+  left: -80px;
+  background: radial-gradient(circle, #8b5cf6 0%, rgba(139, 92, 246, 0) 70%);
   opacity: 0.65;
   animation: floatBlob1 18s ease-in-out infinite alternate;
 }
 
+/* Radiant Lilac Orb */
 .blob-2 {
-  width: 580px;
-  height: 580px;
+  width: clamp(360px, 48vw, 580px);
+  height: clamp(360px, 48vw, 580px);
   top: 10%;
-  right: -130px;
-  background: radial-gradient(circle, #06b6d4 0%, rgba(6, 182, 212, 0) 70%);
+  right: -100px;
+  background: radial-gradient(circle, #a855f7 0%, rgba(168, 85, 247, 0) 70%);
   opacity: 0.6;
   animation: floatBlob2 22s ease-in-out infinite alternate;
 }
 
+/* Periwinkle & Electric Violet Orb */
 .blob-3 {
-  width: 500px;
-  height: 500px;
+  width: clamp(320px, 42vw, 500px);
+  height: clamp(320px, 42vw, 500px);
   bottom: 5%;
   left: 8%;
-  background: radial-gradient(circle, #34d399 0%, rgba(52, 211, 153, 0) 70%);
+  background: radial-gradient(circle, #6366f1 0%, rgba(99, 102, 241, 0) 70%);
   opacity: 0.55;
   animation: floatBlob3 20s ease-in-out infinite alternate;
 }
 
+/* Soft Orchid & Magenta Glow Orb */
 .blob-4 {
-  width: 540px;
-  height: 540px;
-  bottom: -90px;
+  width: clamp(340px, 44vw, 540px);
+  height: clamp(340px, 44vw, 540px);
+  bottom: -80px;
   right: 6%;
-  background: radial-gradient(circle, #0284c7 0%, rgba(2, 132, 199, 0) 70%);
+  background: radial-gradient(circle, #c084fc 0%, rgba(192, 132, 252, 0) 70%);
   opacity: 0.5;
   animation: floatBlob4 25s ease-in-out infinite alternate;
 }
 
+/* Deep Royal Amethyst Center Pool */
 .blob-5 {
-  width: 620px;
-  height: 620px;
+  width: clamp(380px, 50vw, 620px);
+  height: clamp(380px, 50vw, 620px);
   top: 38%;
-  left: 32%;
-  background: radial-gradient(circle, #14b8a6 0%, rgba(20, 184, 166, 0) 70%);
+  left: 30%;
+  background: radial-gradient(circle, #7c3aed 0%, rgba(124, 58, 237, 0) 70%);
   opacity: 0.45;
   animation: floatBlob5 28s ease-in-out infinite alternate;
 }
 
-[data-theme="dark"] .blob-1 {
-  opacity: 0.7;
-}
-
-[data-theme="dark"] .blob-2 {
-  opacity: 0.65;
-}
-
-[data-theme="dark"] .blob-3 {
-  opacity: 0.6;
-}
-
-[data-theme="dark"] .blob-4 {
-  opacity: 0.55;
-}
-
-[data-theme="dark"] .blob-5 {
-  opacity: 0.5;
-}
+[data-theme="dark"] .blob-1 { opacity: 0.7; }
+[data-theme="dark"] .blob-2 { opacity: 0.65; }
+[data-theme="dark"] .blob-3 { opacity: 0.6; }
+[data-theme="dark"] .blob-4 { opacity: 0.55; }
+[data-theme="dark"] .blob-5 { opacity: 0.5; }
 
 /* Blob Motion Keyframes */
 @keyframes floatBlob1 {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(80px, 100px) scale(1.15);
-  }
-
-  100% {
-    transform: translate(-50px, 60px) scale(0.95);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(80px, 100px) scale(1.15); }
+  100% { transform: translate(-50px, 60px) scale(0.95); }
 }
 
 @keyframes floatBlob2 {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(-100px, 80px) scale(1.12);
-  }
-
-  100% {
-    transform: translate(40px, -60px) scale(0.92);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-100px, 80px) scale(1.12); }
+  100% { transform: translate(40px, -60px) scale(0.92); }
 }
 
 @keyframes floatBlob3 {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(90px, -80px) scale(1.18);
-  }
-
-  100% {
-    transform: translate(-60px, -40px) scale(0.96);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(90px, -80px) scale(1.18); }
+  100% { transform: translate(-60px, -40px) scale(0.96); }
 }
 
 @keyframes floatBlob4 {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(-70px, -90px) scale(1.1);
-  }
-
-  100% {
-    transform: translate(60px, 50px) scale(0.93);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-70px, -90px) scale(1.1); }
+  100% { transform: translate(60px, 50px) scale(0.93); }
 }
 
 @keyframes floatBlob5 {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(60px, 70px) scale(1.2);
-  }
-
-  100% {
-    transform: translate(-50px, -50px) scale(0.9);
-  }
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, 70px) scale(1.2); }
+  100% { transform: translate(-50px, -50px) scale(0.9); }
 }
 
 /* --------------------------------------------------------------------------
    4. LIQUID ANIMATIONS & MICRO-INTERACTIONS
    -------------------------------------------------------------------------- */
 @keyframes liquidGradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(28px) scale(0.97);
+    transform: translateY(24px) scale(0.98);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -327,61 +268,36 @@ h6 {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes floatGently {
-  0% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+  100% { transform: translateY(0px); }
 }
 
 @keyframes liquidPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
-  }
-
-  70% {
-    box-shadow: 0 0 0 14px rgba(16, 185, 129, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.5); }
+  70% { box-shadow: 0 0 0 14px rgba(139, 92, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
 }
 
 @keyframes progressShimmer {
-  0% {
-    background-position: -200% 0;
-  }
-
-  100% {
-    background-position: 200% 0;
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 /* --------------------------------------------------------------------------
-   5. LAYOUT & LIQUID GLASS NAVIGATION
+   5. LAYOUT & LIQUID GLASS NAVIGATION (RESPONSIVE)
    -------------------------------------------------------------------------- */
 .app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
+  width: 100%;
 }
 
 .navbar {
@@ -389,36 +305,37 @@ h6 {
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid var(--border-color);
-  padding: 0.95rem 2rem;
+  padding: 0.9rem clamp(1rem, 3vw, 2rem);
   position: sticky;
   top: 0;
   z-index: 60;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
   transition: all var(--transition-normal);
+  width: 100%;
 }
 
 .nav-content {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  flex: 1 1 auto;
-  flex-shrink: 0;
+  gap: 0.65rem;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .nav-brand img {
-  min-width: 44px;
-  height: 44px;
-  filter: drop-shadow(0 4px 10px rgba(16, 185, 129, 0.3));
+  width: clamp(36px, 5vw, 44px);
+  height: clamp(36px, 5vw, 44px);
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(139, 92, 246, 0.35));
   transition: transform var(--transition-bounce);
 }
 
@@ -428,7 +345,7 @@ h6 {
 
 .nav-logo {
   font-family: var(--font-heading);
-  font-size: 1.6rem;
+  font-size: clamp(1.3rem, 4vw, 1.6rem);
   font-weight: 900;
   background: var(--accent-gradient);
   background-size: 200% 200%;
@@ -440,7 +357,7 @@ h6 {
 }
 
 .nav-title {
-  font-size: 1.15rem;
+  font-size: clamp(0.95rem, 3vw, 1.15rem);
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.3px;
@@ -449,14 +366,14 @@ h6 {
 .nav-buttons {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .nav-btn {
   background: transparent;
   border: 1px solid transparent;
   color: var(--text-secondary);
-  padding: 0.55rem 0.95rem;
+  padding: 0.55rem 0.9rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-weight: 600;
@@ -478,7 +395,7 @@ h6 {
   animation: liquidGradientFlow 5s ease infinite;
   color: #ffffff !important;
   font-weight: 700;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
   border-color: transparent;
 }
 
@@ -524,6 +441,7 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .theme-toggle-btn:hover {
@@ -542,7 +460,8 @@ h6 {
 
 .mobile-controls {
   display: none;
-  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.65rem;
 }
 
 .mobile-menu-toggle {
@@ -551,7 +470,7 @@ h6 {
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  z-index: 50;
+  z-index: 70;
 }
 
 .hamburger {
@@ -574,23 +493,14 @@ h6 {
   transition: all 0.3s;
 }
 
-.hamburger::before {
-  top: -6px;
-}
+.hamburger::before { top: -6px; }
+.hamburger::after { top: 6px; }
 
-.hamburger::after {
-  top: 6px;
-}
-
-.hamburger.open {
-  background: transparent;
-}
-
+.hamburger.open { background: transparent; }
 .hamburger.open::before {
   transform: rotate(45deg);
   top: 0;
 }
-
 .hamburger.open::after {
   transform: rotate(-45deg);
   top: 0;
@@ -598,8 +508,8 @@ h6 {
 
 .main-content {
   max-width: 1200px;
-  margin: 2.5rem auto;
-  padding: 0 1.5rem;
+  margin: clamp(1.5rem, 4vw, 2.5rem) auto;
+  padding: 0 clamp(1rem, 3vw, 1.5rem);
   flex: 1;
   width: 100%;
   position: relative;
@@ -608,25 +518,27 @@ h6 {
 }
 
 /* --------------------------------------------------------------------------
-   6. HOME, HERO & LIQUID GLASS CARDS
+   6. HOME & HERO SECTION (RESPONSIVE)
    -------------------------------------------------------------------------- */
 .home-container {
   display: flex;
   flex-direction: column;
-  gap: 3.25rem;
+  gap: clamp(2rem, 5vw, 3.25rem);
+  width: 100%;
 }
 
 .hero-section {
   text-align: center;
-  padding: 4.5rem 1rem 2.5rem;
+  padding: clamp(2rem, 6vw, 4.5rem) 1rem clamp(1.5rem, 4vw, 2.5rem);
   max-width: 900px;
   margin: 0 auto;
   animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
   position: relative;
+  width: 100%;
 }
 
 .hero-title {
-  font-size: 3.6rem;
+  font-size: clamp(2.1rem, 6.5vw, 3.6rem);
   font-weight: 900;
   background: var(--accent-gradient);
   background-size: 200% 200%;
@@ -635,14 +547,15 @@ h6 {
   -webkit-background-clip: text;
   background-clip: text;
   line-height: 1.15;
-  margin-bottom: 1.5rem;
-  letter-spacing: -1.2px;
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  letter-spacing: -0.8px;
+  word-break: break-word;
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
+  font-size: clamp(0.98rem, 2.5vw, 1.25rem);
   color: var(--text-secondary);
-  margin-bottom: 2.75rem;
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
   max-width: 760px;
   margin-inline: auto;
   line-height: 1.65;
@@ -658,17 +571,18 @@ h6 {
   animation: liquidGradientFlow 5s ease infinite;
   color: #ffffff;
   border: none;
-  font-size: 1.05rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.05rem);
   font-weight: 700;
-  padding: 0.95rem 2.4rem;
+  padding: 0.95rem clamp(1.5rem, 4vw, 2.4rem);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
   transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  max-width: 100%;
 }
 
 .primary-btn::after {
@@ -685,7 +599,7 @@ h6 {
 
 .primary-btn:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 14px 32px rgba(16, 185, 129, 0.45), 0 0 25px rgba(6, 182, 212, 0.35);
+  box-shadow: 0 14px 32px rgba(139, 92, 246, 0.5), 0 0 25px rgba(168, 85, 247, 0.35);
 }
 
 .primary-btn:hover::after {
@@ -698,8 +612,9 @@ h6 {
 
 .home-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 1.75rem);
+  width: 100%;
 }
 
 /* --------------------------------------------------------------------------
@@ -717,7 +632,7 @@ h6 {
   border-top: 1.5px solid var(--border-highlight);
   border-left: 1.5px solid var(--border-highlight);
   border-radius: var(--radius-md);
-  padding: 2.25rem;
+  padding: clamp(1.25rem, 3.5vw, 2.25rem);
   box-shadow: var(--glass-shadow);
   transition: all var(--transition-normal);
   animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
@@ -725,6 +640,7 @@ h6 {
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 /* Curved Liquid Specular Sheen across top of cards */
@@ -755,12 +671,12 @@ h6 {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
-.synopsis-card>*,
-.card>*,
-.demand-section>*,
-.roadmap-card>*,
-.team-card>*,
-.match-form>* {
+.synopsis-card > *,
+.card > *,
+.demand-section > *,
+.roadmap-card > *,
+.team-card > *,
+.match-form > * {
   position: relative;
   z-index: 1;
 }
@@ -769,7 +685,7 @@ h6 {
 .demand-section:hover,
 .card:hover,
 .roadmap-card:hover {
-  transform: translateY(-8px) scale(1.015);
+  transform: translateY(-6px) scale(1.01);
   background: var(--bg-surface-hover);
   border-color: var(--border-focus);
   border-top-color: #ffffff;
@@ -778,13 +694,14 @@ h6 {
 
 .synopsis-card h3,
 .demand-header h3 {
-  font-size: 1.35rem;
+  font-size: clamp(1.15rem, 3vw, 1.35rem);
   color: var(--text-primary);
   margin-bottom: 1.25rem;
   font-weight: 800;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  word-break: break-word;
 }
 
 .synopsis-list {
@@ -800,15 +717,16 @@ h6 {
   font-weight: 700;
 }
 
-/* 4-column layout for Opportunities */
+/* 4-column layout for Opportunities (Fluid Responsive Grid) */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.5rem;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  width: 100%;
 }
 
 .cards-grid .card {
-  padding: 1.6rem;
+  padding: clamp(1.2rem, 2.5vw, 1.6rem);
 }
 
 .card-title {
@@ -817,6 +735,7 @@ h6 {
   color: var(--text-primary);
   margin-bottom: 0.4rem;
   line-height: 1.35;
+  word-break: break-word;
 }
 
 .card-provider {
@@ -875,27 +794,31 @@ h6 {
   border-radius: 99px;
   margin-bottom: 0.85rem;
   align-self: flex-start;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.35);
   letter-spacing: 0.3px;
 }
 
 .match-badge.scholarship {
-  background: linear-gradient(135deg, #0891b2, #0284c7);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
 }
 
 /* --------------------------------------------------------------------------
-   8. DEMAND PROGRESS BARS & ACCORDION
+   8. DEMAND PROGRESS BARS & ACCORDION (RESPONSIVE)
    -------------------------------------------------------------------------- */
 .demand-chart {
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
+  width: 100%;
 }
 
 .chart-label-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.98rem;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: clamp(0.88rem, 2.5vw, 0.98rem);
   margin-bottom: 0.6rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -917,7 +840,7 @@ h6 {
   background: var(--accent-gradient);
   background-size: 200% 100%;
   animation: progressShimmer 4s linear infinite;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.45);
 }
 
 .demand-item {
@@ -926,6 +849,7 @@ h6 {
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
   border: 1px solid transparent;
+  width: 100%;
 }
 
 .demand-item:hover {
@@ -952,6 +876,7 @@ h6 {
   border-top: 1px dashed var(--border-color);
   cursor: default;
   animation: fadeIn 0.3s ease;
+  width: 100%;
 }
 
 .dropdown-column h5 {
@@ -994,6 +919,7 @@ h6 {
   display: inline-block;
   margin-bottom: 0.2rem;
   transition: color var(--transition-fast);
+  word-break: break-word;
 }
 
 .dropdown-list a:hover {
@@ -1018,17 +944,18 @@ h6 {
 }
 
 /* --------------------------------------------------------------------------
-   9. FORMS & INPUTS (LIQUID GLASS)
+   9. FORMS & INPUTS (RESPONSIVE LIQUID GLASS)
    -------------------------------------------------------------------------- */
 .form-container {
   max-width: 850px;
   margin: 0 auto;
   animation: fadeUp 0.4s ease;
+  width: 100%;
 }
 
 .form-title {
   text-align: center;
-  font-size: 2.2rem;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
   margin-bottom: 2rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -1041,17 +968,19 @@ h6 {
   border: 1px solid var(--border-color);
   border-top: 1.5px solid var(--border-highlight);
   border-left: 1.5px solid var(--border-highlight);
-  padding: 2.75rem;
+  padding: clamp(1.25rem, 4vw, 2.75rem);
   border-radius: var(--radius-md);
   box-shadow: var(--glass-shadow);
   margin-bottom: 3rem;
+  width: 100%;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
   margin-bottom: 1.5rem;
+  width: 100%;
 }
 
 .form-group {
@@ -1059,6 +988,7 @@ h6 {
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1.35rem;
+  width: 100%;
 }
 
 .form-label {
@@ -1073,9 +1003,10 @@ h6 {
   color: var(--text-primary);
   padding: 0.9rem 1.15rem;
   border-radius: var(--radius-sm);
-  font-size: 0.95rem;
+  font-size: 1rem; /* 16px ensures zero iOS auto-zoom */
   font-family: inherit;
   transition: all var(--transition-fast);
+  width: 100%;
 }
 
 .form-control:focus {
@@ -1097,12 +1028,12 @@ h6 {
   font-size: 1.05rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
   transition: all var(--transition-fast);
 }
 
 .submit-btn:hover:not(:disabled) {
-  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.45);
+  box-shadow: 0 12px 28px rgba(139, 92, 246, 0.5);
   transform: translateY(-2px);
 }
 
@@ -1123,17 +1054,18 @@ h6 {
   border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  height: 75vh;
+  height: clamp(500px, 75vh, 800px);
   max-width: 900px;
   margin: 0 auto;
   box-shadow: var(--glass-shadow);
   overflow: hidden;
+  width: 100%;
 }
 
 .fullscreen-chat {
   width: 100% !important;
   max-width: 100% !important;
-  height: 86vh !important;
+  height: clamp(550px, 86vh, 920px) !important;
   border-radius: var(--radius-lg);
   box-shadow: var(--glass-shadow);
   border: 1px solid var(--border-color);
@@ -1149,31 +1081,32 @@ h6 {
 
 .main-content:has(.fullscreen-chat) {
   max-width: 100% !important;
-  padding: 0 2rem !important;
+  padding: 0 clamp(0.75rem, 2vw, 2rem) !important;
 }
 
 .chat-header {
   background: var(--bg-surface-solid);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
-  padding: 1.25rem 1.75rem;
+  padding: clamp(0.85rem, 2vw, 1.25rem) clamp(1rem, 3vw, 1.75rem);
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .chat-header h2 {
   color: var(--text-primary);
-  font-size: 1.25rem;
+  font-size: clamp(1.05rem, 3vw, 1.25rem);
   font-weight: 800;
 }
 
 .chat-header p {
-  font-size: 0.85rem;
+  font-size: clamp(0.78rem, 2vw, 0.85rem);
   color: var(--text-muted);
 }
 
 .chat-history {
   flex: 1;
-  padding: 1.75rem;
+  padding: clamp(1rem, 2.5vw, 1.75rem);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -1194,12 +1127,13 @@ h6 {
 }
 
 .message-bubble {
-  max-width: 85%;
-  padding: 1.15rem 1.45rem;
+  max-width: min(85%, 720px);
+  padding: clamp(0.9rem, 2vw, 1.15rem) clamp(1rem, 2.5vw, 1.45rem);
   border-radius: var(--radius-md);
-  font-size: 0.96rem;
+  font-size: clamp(0.88rem, 2.2vw, 0.96rem);
   box-shadow: var(--shadow-sm);
   line-height: 1.6;
+  word-break: break-word;
 }
 
 .message-row.user .message-bubble {
@@ -1208,7 +1142,7 @@ h6 {
   animation: liquidGradientFlow 6s ease infinite;
   color: #ffffff;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 6px 18px rgba(139, 92, 246, 0.4);
 }
 
 .message-row.ai .message-bubble {
@@ -1226,9 +1160,10 @@ h6 {
 .chat-input-form {
   display: flex;
   gap: 0.75rem;
-  padding: 1.15rem 1.5rem;
+  padding: clamp(0.75rem, 2vw, 1.15rem) clamp(0.85rem, 2vw, 1.5rem);
   background: var(--bg-surface-solid);
   border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .chat-input {
@@ -1236,11 +1171,12 @@ h6 {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
-  padding: 0.9rem 1.35rem;
+  padding: 0.85rem clamp(0.85rem, 2vw, 1.35rem);
   border-radius: 99px;
-  font-size: 0.95rem;
+  font-size: 1rem; /* 16px prevents iOS zoom */
   font-family: inherit;
   transition: all var(--transition-fast);
+  min-width: 0;
 }
 
 .chat-input:focus {
@@ -1256,16 +1192,17 @@ h6 {
   animation: liquidGradientFlow 5s ease infinite;
   color: white;
   border: none;
-  padding: 0 1.75rem;
+  padding: 0 clamp(1.2rem, 3vw, 1.75rem);
   border-radius: 99px;
   font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-fast);
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+  flex-shrink: 0;
 }
 
 .chat-send-btn:hover:not(:disabled) {
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.6);
   transform: scale(1.03);
 }
 
@@ -1278,7 +1215,7 @@ h6 {
   font-weight: 800;
   padding: 0.35rem 0.9rem;
   border-radius: 99px;
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -1316,6 +1253,7 @@ h6 {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   font-weight: 800;
+  word-break: break-word;
 }
 
 .markdown-body ul,
@@ -1340,10 +1278,11 @@ h6 {
   overflow-x: auto;
   border-collapse: collapse;
   margin: 1.5rem 0;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
   background: var(--bg-surface);
+  -webkit-overflow-scrolling: touch;
 }
 
 .markdown-body th {
@@ -1352,7 +1291,7 @@ h6 {
   font-weight: 800;
   border-bottom: 1px solid var(--border-color);
   padding: 0.85rem 1.25rem;
-  min-width: 180px;
+  min-width: 160px;
   text-align: left;
 }
 
@@ -1360,20 +1299,21 @@ h6 {
   border-bottom: 1px solid var(--border-color);
   padding: 0.85rem 1.25rem;
   color: var(--text-secondary);
-  min-width: 180px;
+  min-width: 160px;
   vertical-align: top;
   line-height: 1.55;
 }
 
 .markdown-body pre {
-  background: #022018 !important;
+  background: #140d28 !important;
   padding: 1.25rem !important;
   border-radius: var(--radius-sm) !important;
   overflow-x: auto !important;
   margin: 1.25rem 0;
   font-family: 'Fira Code', 'Courier New', monospace;
-  color: #a7f3d0 !important;
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #ddd6fe !important;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  -webkit-overflow-scrolling: touch;
 }
 
 .markdown-body code {
@@ -1394,7 +1334,7 @@ h6 {
 }
 
 /* --------------------------------------------------------------------------
-   11. MODAL (LIQUID GLASS)
+   11. MODAL (RESPONSIVE LIQUID GLASS)
    -------------------------------------------------------------------------- */
 .modal-overlay {
   position: fixed;
@@ -1402,7 +1342,7 @@ h6 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(4, 18, 14, 0.65);
+  background-color: rgba(14, 10, 26, 0.7);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   display: flex;
@@ -1419,12 +1359,14 @@ h6 {
   border: 1px solid var(--border-color);
   border-top: 1.5px solid var(--border-highlight);
   border-radius: var(--radius-lg);
-  padding: 2.5rem;
+  padding: clamp(1.5rem, 5vw, 2.5rem);
   width: 100%;
-  max-width: 440px;
+  max-width: min(440px, 94vw);
+  max-height: 90vh;
   position: relative;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 30px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(139, 92, 246, 0.3);
   animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  overflow-y: auto;
 }
 
 .close-btn {
@@ -1453,126 +1395,13 @@ h6 {
 }
 
 /* --------------------------------------------------------------------------
-   12. MOBILE RESPONSIVENESS
-   -------------------------------------------------------------------------- */
-@media (max-width: 992px) {
-  .desktop-only {
-    display: none !important;
-  }
-
-  .mobile-only {
-    display: flex !important;
-  }
-
-  .navbar {
-    padding: 0.85rem 1.25rem;
-  }
-
-  .mobile-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-  }
-
-  .mobile-menu-toggle {
-    display: block;
-  }
-
-  .nav-content {
-    flex-wrap: wrap;
-  }
-
-  .nav-buttons {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    padding-top: 1rem;
-    gap: 0.5rem;
-    flex: 1 1 100%;
-  }
-
-  .nav-buttons.open {
-    display: flex;
-  }
-
-  .nav-auth-wrapper {
-    flex-direction: column;
-    width: 100%;
-    margin-top: 0.5rem;
-  }
-
-  .nav-auth-wrapper button {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .hero-title {
-    font-size: 2.4rem;
-    line-height: 1.2;
-  }
-
-  .hero-section {
-    padding-top: 2rem;
-  }
-
-  .fullscreen-chat {
-    height: 85vh !important;
-    border-radius: 0 !important;
-    border-left: none;
-    border-right: none;
-  }
-
-  .main-content:has(.fullscreen-chat) {
-    padding: 0 !important;
-  }
-
-  .cards-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .support-fab-container {
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
-
-  .support-box {
-    width: calc(100vw - 3rem);
-    max-width: 320px;
-    position: absolute;
-    bottom: 4.5rem;
-    right: 0;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   13. CUSTOM SCROLLBARS
-   -------------------------------------------------------------------------- */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
-}
-
-/* --------------------------------------------------------------------------
-   14. ROADMAP & EVALUATOR (LIQUID GLASS)
+   12. ROADMAP & EVALUATOR (RESPONSIVE LIQUID GLASS)
    -------------------------------------------------------------------------- */
 .roadmap-container {
   max-width: 900px;
   margin: 0 auto;
   animation: fadeUp 0.4s ease;
+  width: 100%;
 }
 
 .roadmap-header {
@@ -1581,7 +1410,7 @@ h6 {
 }
 
 .roadmap-header h2 {
-  font-size: 2.2rem;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
   color: var(--text-primary);
   font-weight: 900;
   letter-spacing: -0.5px;
@@ -1591,6 +1420,7 @@ h6 {
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
+  width: 100%;
 }
 
 .roadmap-card {
@@ -1600,8 +1430,9 @@ h6 {
   border: 1px solid var(--border-color);
   border-top: 1.5px solid var(--border-highlight);
   border-radius: var(--radius-md);
-  padding: 2.25rem;
+  padding: clamp(1.25rem, 3.5vw, 2.25rem);
   box-shadow: var(--glass-shadow);
+  width: 100%;
 }
 
 .roadmap-card-header {
@@ -1609,7 +1440,8 @@ h6 {
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
+  width: 100%;
 }
 
 .percent-label {
@@ -1623,17 +1455,19 @@ h6 {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
   font-size: 0.95rem;
   margin-top: 1.25rem;
+  width: 100%;
 }
 
 .roadmap-skills-panel {
   background: var(--primary-light);
-  padding: 1.25rem;
+  padding: clamp(0.85rem, 2.5vw, 1.25rem);
   border-radius: var(--radius-sm);
   margin-bottom: 1.5rem;
   border: 1px solid var(--border-color);
+  width: 100%;
 }
 
 .skill-milestone-pill {
@@ -1647,17 +1481,20 @@ h6 {
   font-size: 0.84rem;
   font-weight: 600;
   box-shadow: var(--shadow-sm);
+  max-width: 100%;
+  word-break: break-word;
 }
 
 .roadmap-evaluator-card {
   margin-top: 1.75rem;
-  padding: 1.75rem;
+  padding: clamp(1rem, 2.5vw, 1.75rem);
   background: var(--bg-surface-solid);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
+  width: 100%;
 }
 
 .evaluator-textarea {
@@ -1669,7 +1506,7 @@ h6 {
   padding: 1rem 1.25rem;
   color: var(--text-primary);
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 1rem; /* 16px prevents iOS zoom */
   resize: vertical;
   transition: all var(--transition-fast);
 }
@@ -1684,15 +1521,16 @@ h6 {
   margin-top: 1.5rem;
   padding: 1.25rem 1.5rem;
   border-radius: var(--radius-sm);
+  width: 100%;
 }
 
 .eval-feedback-box.success {
-  background: rgba(16, 185, 129, 0.14);
-  border: 1px solid var(--success-color);
+  background: rgba(139, 92, 246, 0.14);
+  border: 1px solid var(--primary-color);
 }
 
 /* --------------------------------------------------------------------------
-   15. FLOATING WHATSAPP SUPPORT (LIQUID GLASS)
+   13. FLOATING WHATSAPP SUPPORT (RESPONSIVE LIQUID GLASS)
    -------------------------------------------------------------------------- */
 .support-fab-container {
   position: fixed;
@@ -1714,7 +1552,7 @@ h6 {
   padding: 1.35rem;
   box-shadow: var(--glass-shadow-hover);
   margin-bottom: 1rem;
-  width: 320px;
+  width: min(320px, calc(100vw - 2rem));
   animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transform-origin: bottom right;
 }
@@ -1739,7 +1577,7 @@ h6 {
   color: white;
   border-color: transparent;
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
 }
 
 .support-fab-btn {
@@ -1756,32 +1594,33 @@ h6 {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45);
   transition: all var(--transition-bounce);
 }
 
 .support-fab-btn:hover {
   transform: scale(1.1) rotate(6deg);
-  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.6);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.65);
 }
 
 /* --------------------------------------------------------------------------
-   16. ABOUT US SECTION (LIQUID GLASS TEAM)
+   14. ABOUT US SECTION (RESPONSIVE LIQUID GLASS)
    -------------------------------------------------------------------------- */
 .about-container {
   max-width: 1040px;
   margin: 0 auto;
-  padding: 2.5rem 0;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
   animation: fadeUp 0.5s ease;
+  width: 100%;
 }
 
 .about-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
 }
 
 .about-header h2 {
-  font-size: 2.8rem;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
   color: var(--text-primary);
   margin-bottom: 1.25rem;
   font-weight: 900;
@@ -1789,7 +1628,7 @@ h6 {
 }
 
 .about-header p {
-  font-size: 1.15rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
   color: var(--text-secondary);
   line-height: 1.75;
   max-width: 820px;
@@ -1799,9 +1638,10 @@ h6 {
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1.5rem, 4vw, 2.5rem);
   justify-content: center;
+  width: 100%;
 }
 
 .team-card {
@@ -1812,7 +1652,7 @@ h6 {
   border-top: 1.5px solid var(--border-highlight);
   border-left: 1.5px solid var(--border-highlight);
   border-radius: var(--radius-lg);
-  padding: 3.25rem 2.5rem;
+  padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.25rem, 3.5vw, 2.5rem);
   box-shadow: var(--glass-shadow);
   transition: all var(--transition-normal);
   display: flex;
@@ -1821,6 +1661,7 @@ h6 {
   text-align: center;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .team-card::before {
@@ -1840,30 +1681,32 @@ h6 {
 }
 
 .team-avatar {
-  width: 86px;
-  height: 86px;
+  width: clamp(70px, 10vw, 86px);
+  height: clamp(70px, 10vw, 86px);
   border-radius: 50%;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.85rem;
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
   font-weight: 900;
   margin-bottom: 1.5rem;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
   animation: floatGently 4s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 .team-name {
-  font-size: 1.45rem;
+  font-size: clamp(1.2rem, 3vw, 1.45rem);
   font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 0.4rem;
   line-height: 1.25;
+  word-break: break-word;
 }
 
 .team-role {
-  font-size: 0.96rem;
+  font-size: clamp(0.85rem, 2.5vw, 0.96rem);
   color: var(--primary-color);
   font-weight: 800;
   margin-bottom: 0.4rem;
@@ -1878,13 +1721,13 @@ h6 {
 }
 
 .team-bio {
-  font-size: 0.95rem;
+  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   color: var(--text-secondary);
   line-height: 1.65;
 }
 
 /* --------------------------------------------------------------------------
-   17. CHATBOT ENHANCEMENTS: ROADMAP BUTTONS & QUICK CHIPS
+   15. CHATBOT ENHANCEMENTS: ROADMAP BUTTONS & QUICK CHIPS
    -------------------------------------------------------------------------- */
 .chat-roadmap-btn {
   display: inline-flex;
@@ -1901,24 +1744,26 @@ h6 {
   border: none;
   cursor: pointer;
   margin: 0.4rem 0.25rem;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
   transition: all var(--transition-fast);
   text-decoration: none !important;
 }
 
 .chat-roadmap-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
   filter: brightness(1.1);
 }
 
 .chat-quick-chips {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem clamp(0.85rem, 2.5vw, 1.5rem);
   background: var(--bg-surface-solid);
   border-top: 1px solid var(--border-color);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-wrap: nowrap;
 }
 
 .chip-btn {
@@ -1932,6 +1777,8 @@ h6 {
   cursor: pointer;
   transition: all var(--transition-fast);
   text-align: left;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .chip-btn:hover:not(:disabled) {
@@ -1939,14 +1786,223 @@ h6 {
   color: #ffffff;
   background: var(--accent-gradient);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+}
+
+/* --------------------------------------------------------------------------
+   16. CUSTOM SCROLLBARS
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* --------------------------------------------------------------------------
+   17. COMPREHENSIVE RESPONSIVENESS (MOBILE, TABLET, DESKTOP)
+   -------------------------------------------------------------------------- */
+
+/* TABLETS & SMALL LAPTOPS (<= 992px) */
+@media (max-width: 992px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: flex !important;
+  }
+
+  .mobile-controls {
+    display: flex !important;
+  }
+
+  .mobile-menu-toggle {
+    display: block !important;
+  }
+
+  .nav-buttons {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--bg-surface-solid);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    backdrop-filter: blur(28px) saturate(190%);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
+    padding: 1.25rem 1.5rem;
+    gap: 0.65rem;
+    z-index: 55;
+    animation: fadeUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-buttons.open {
+    display: flex !important;
+  }
+
+  .nav-buttons .nav-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.8rem 1.25rem;
+    font-size: 0.95rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-auth-wrapper {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .nav-auth-wrapper button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem;
+  }
+
+  .demand-dropdown {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .fullscreen-chat {
+    height: 84vh !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  .support-fab-container {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+}
+
+/* PHABLETS & MOBILES (<= 768px) */
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-control,
+  .chat-input,
+  .evaluator-textarea {
+    font-size: 16px !important; /* Strictly prevents iOS Safari auto-zoom */
+  }
+
+  .fullscreen-chat {
+    height: 82vh !important;
+    border-radius: 0 !important;
+    border-left: none;
+    border-right: none;
+  }
+
+  .main-content:has(.fullscreen-chat) {
+    padding: 0 !important;
+  }
+
+  .message-bubble {
+    max-width: 92%;
+  }
+
+  .support-fab-container {
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .support-box {
+    width: calc(100vw - 2.5rem);
+    max-width: 320px;
+    bottom: 4.5rem;
+    right: 0;
+  }
+
+  .roadmap-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .roadmap-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .roadmap-controls button {
+    width: 100%;
+  }
+}
+
+/* SMALL PHONES (<= 480px) */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .nav-title {
+    display: none; /* Keeps brand compact on 320-375px screens */
+  }
+
+  .hero-section {
+    padding: 1.75rem 0.5rem 1.25rem;
+  }
+
+  .primary-btn {
+    width: 100%;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .card-actions a,
+  .card-actions button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .chat-input-form {
+    padding: 0.75rem 0.85rem;
+  }
+
+  .chat-send-btn {
+    padding: 0 1.2rem;
+  }
 }
 
 /* --------------------------------------------------------------------------
    18. BROWSER PRODUCTION & RENDER FALLBACK GUARANTEE
    -------------------------------------------------------------------------- */
 @supports not ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
-
   .navbar,
   .synopsis-card,
   .demand-section,
