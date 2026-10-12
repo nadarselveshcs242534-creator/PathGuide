@@ -21,15 +21,15 @@ const AboutUs = () => {
           <p className="team-bio" style={{ textAlign: 'justify', marginBottom: '2rem' }}>
             Selvesh is a B.Sc. Computer Science student with a strong interest in Artificial Intelligence, Machine Learning, Web Development, Software Development and Data Analytics. He is serving as an Instructor Assistant for Data Viusalization with Tableau Course at Rock The IT, supporting students in their learning and practical activities. He is also focused on building practical projects using Python, React, JavaScript, databases, and APIs to develop useful technology solutions. Selvesh also serves as DLLE (Department of life long extension) Student Manager in his college since last acedemic year.
           </p>
-          
+
           {/* Vertical Left-Aligned Contact Block */}
-          <div style={{ marginTop: 'auto', width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left', wordBreak: 'break-word' }}>
+          <div style={{ marginTop: 'auto', width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left', wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
             <div>
               <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Email:</strong>
               <a href="mailto:nadarselveshcs242534@gmail.com" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.95rem' }}>nadarselveshcs242534@gmail.com</a>
             </div>
             <div>
-              <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Contact:</strong> 
+              <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Contact:</strong>
               <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>+91 8898732383</span>
             </div>
             <div>
@@ -55,13 +55,13 @@ const AboutUs = () => {
           </p>
 
           {/* Vertical Left-Aligned Contact Block */}
-          <div style={{ marginTop: 'auto', width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left', wordBreak: 'break-word' }}>
+          <div style={{ marginTop: 'auto', width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left', wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
             <div>
               <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Email:</strong>
               <a href="mailto:omiththilakancs242537@gmail.com" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.95rem' }}>omiththilakancs242537@gmail.com</a>
             </div>
             <div>
-              <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Contact:</strong> 
+              <strong style={{ display: 'block', color: 'var(--text-primary)', fontSize: '1.05rem', marginBottom: '0.2rem' }}>Contact:</strong>
               <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>+91 7306238385</span>
             </div>
             <div>
