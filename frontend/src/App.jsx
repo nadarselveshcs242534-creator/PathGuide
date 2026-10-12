@@ -99,7 +99,7 @@ const App = () => {
 
   const fetchDemandTrends = async () => {
     try {
-      const response = await axios.get('https://cep-pathguide-backend.onrender.com/api/demand-trends');
+      const response = await axios.get('http://localhost:8000/api/demand-trends');
       setDemandData(response.data.trends || []);
     } catch (err) {
       console.error("Failed to load demand trends:", err);
@@ -133,7 +133,7 @@ const App = () => {
     setShowAuthModal(false); 
     
     try {
-      const res = await axios.get(`https://cep-pathguide-backend.onrender.com/api/profile/${email}`);
+      const res = await axios.get(`http://localhost:8000/api/profile/${email}`);
       if (res.data.profile) {
         setUserProfile(res.data.profile);
       }
@@ -152,6 +152,15 @@ const App = () => {
 
   return (
     <div className="app-container">
+      {/* Dynamic Ambient Liquid Mesh Orbs */}
+      <div className="liquid-ambient-canvas" aria-hidden="true">
+        <div className="liquid-blob blob-1"></div>
+        <div className="liquid-blob blob-2"></div>
+        <div className="liquid-blob blob-3"></div>
+        <div className="liquid-blob blob-4"></div>
+        <div className="liquid-blob blob-5"></div>
+      </div>
+
       {showAuthModal && (
         <AuthModal 
           onClose={() => setShowAuthModal(false)} 
@@ -221,6 +230,15 @@ const App = () => {
           </div>
         </div>
       </nav>
+
+      {/* Mobile Navigation Ambient Glass Backdrop */}
+      {isMobileMenuOpen && (
+        <div 
+          className="mobile-nav-backdrop" 
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-label="Close navigation menu"
+        />
+      )}
 
       <main className="main-content">
         {activeTab === 'home' && <Home onExplore={() => handleNavClick('user-window')} demandData={demandData} />}
