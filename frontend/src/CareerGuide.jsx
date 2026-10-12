@@ -47,6 +47,7 @@ const CareerGuide = () => {
 
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Guarantee we always have an active session to render
@@ -124,7 +125,7 @@ const CareerGuide = () => {
       // Pass chat history context to backend (exclude the current input from history payload)
       const historyPayload = activeSession.messages.map(m => ({ role: m.role, content: m.content }));
 
-      const response = await axios.post('https://cep-pathguide-backend.onrender.com/api/career-guidance', {
+      const response = await axios.post('http://localhost:8000/api/career-guidance', {
         prompt: currentInput,
         history: historyPayload
       });
@@ -136,7 +137,7 @@ const CareerGuide = () => {
     } catch (err) {
       updateSessionMessages(activeSessionId, [
         ...newMessages,
-        { role: 'ai', content: 'Connection error. Please ensure your backend server is running.' }
+        { role: 'ai', content: 'Connection error. Please ensure your FastAPI server is running.' }
       ]);
     } finally {
       setLoading(false);
@@ -215,11 +216,55 @@ const CareerGuide = () => {
       {/* Main Chat Area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div className="chat-header">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-            <div>
-              <h2>Path Guide Navigator</h2>
-              <p>Real-time AI advising with Context Memory & RAG Search</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className="mobile-only"
+                onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
+                style={{
+                  background: 'var(--primary-light)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--primary-color)',
+                  padding: '0.45rem 0.8rem',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '0.85rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}
+                title="View Saved Conversations"
+              >
+                💬 <span>Chats ({sessions.length})</span>
+              </button>
+
+              <button
+                type="button"
+                className="mobile-only"
+                onClick={handleNewChat}
+                style={{
+                  background: 'var(--accent-gradient)',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '0.45rem 0.8rem',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '0.82rem',
+                  fontWeight: '700',
+                  cursor: 'pointer'
+                }}
+                title="Start a New Conversation"
+              >
+                + New
+              </button>
+
+              <div>
+                <h2>Path Guide Navigator</h2>
+                <p>Real-time AI advising with Context Memory & RAG Search</p>
+              </div>
             </div>
+
             <span className="rag-pill-badge">⚡ RAG Database Active</span>
           </div>
         </div>
@@ -261,6 +306,94 @@ const CareerGuide = () => {
           </button>
         </form>
       </div>
+
+      {/* Mobile & Tablet Sessions Drawer */}
+      {isMobileDrawerOpen && (
+        <>
+          <div 
+            className="mobile-chat-backdrop" 
+            onClick={() => setIsMobileDrawerOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="mobile-chat-drawer">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', borderBottom: '1px solid var(--border-color)' }}>
+              <h3 style={{ fontSize: '1.1rem', margin: 0, color: 'var(--text-primary)', fontWeight: '800' }}>💬 Saved Chats</h3>
+              <button 
+                onClick={() => setIsMobileDrawerOpen(false)}
+                style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.2rem' }}
+              >
+                ✕
+              </button>
+            </div>
+            <div style={{ padding: '1rem', flexShrink: 0 }}>
+              <button 
+                onClick={() => {
+                  handleNewChat();
+                  setIsMobileDrawerOpen(false);
+                }} 
+                className="primary-btn" 
+                style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+              >
+                <span>+</span> New Conversation
+              </button>
+            </div>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '0 1rem 1rem' }}>
+              <p style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-muted)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                All Conversations ({sessions.length})
+              </p>
+              {sessions.map(s => (
+                <div 
+                  key={s.id} 
+                  onClick={() => {
+                    setActiveSessionId(s.id);
+                    setIsMobileDrawerOpen(false);
+                  }} 
+                  style={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0.75rem 1rem', 
+                    margin: '0.35rem 0', 
+                    cursor: 'pointer', 
+                    borderRadius: 'var(--radius-sm)', 
+                    backgroundColor: activeSessionId === s.id ? 'var(--primary-light)' : 'transparent', 
+                    border: activeSessionId === s.id ? '1px solid var(--border-focus)' : '1px solid transparent',
+                    color: activeSessionId === s.id ? 'var(--primary-color)' : 'var(--text-secondary)', 
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{ 
+                    fontWeight: activeSessionId === s.id ? '600' : '500', 
+                    fontSize: '0.85rem',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    flex: 1
+                  }}>
+                    💬 {s.name}
+                  </div>
+                  <button
+                    onClick={(e) => handleDeleteChat(e, s.id)}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--danger-color)',
+                      cursor: 'pointer',
+                      opacity: activeSessionId === s.id ? 1 : 0.6,
+                      padding: '0.2rem',
+                      fontSize: '0.9rem',
+                      marginLeft: '0.5rem'
+                    }}
+                    title="Delete Chat"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
