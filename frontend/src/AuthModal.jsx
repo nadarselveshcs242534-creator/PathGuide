@@ -21,7 +21,6 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
 
     try {
       const endpoint = isLogin ? '/api/login' : '/api/register';
-      // FIXED: Replaced localhost with your live Render backend URL so mobile phones can connect
       const res = await axios.post(`https://cep-pathguide-backend.onrender.com${endpoint}`, formData);
       onLoginSuccess(res.data.email);
     } catch (err) {
