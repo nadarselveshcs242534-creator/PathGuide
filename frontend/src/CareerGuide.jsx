@@ -14,7 +14,7 @@ I am your AI Career & Financial Aid Advisor powered by Groq LPU & RAG.
 - 🎓 **RAG Recommendations**: Every answer automatically searches our database for live **scholarships & verified courses** tailored to your prompt.`,
 };
 
-const CareerGuide = () => {
+const CareerGuide = ({ onEnroll }) => {
   // 1. Initialize state from LocalStorage to permanently save chats across tab switches & reloads
   const [sessions, setSessions] = useState(() => {
     const savedSessions = localStorage.getItem('aiChatSessions');
@@ -39,8 +39,8 @@ const CareerGuide = () => {
       }
     }
     // Fallback if no saved ID exists
-    const fallbackId = localStorage.getItem('aiChatSessions') 
-      ? JSON.parse(localStorage.getItem('aiChatSessions'))[0]?.id 
+    const fallbackId = localStorage.getItem('aiChatSessions')
+      ? JSON.parse(localStorage.getItem('aiChatSessions'))[0]?.id
       : Date.now();
     return fallbackId;
   });
@@ -82,7 +82,7 @@ const CareerGuide = () => {
   const handleDeleteChat = (e, idToDelete) => {
     e.stopPropagation(); // Prevent clicking the delete button from triggering the chat selection
     const updatedSessions = sessions.filter(s => s.id !== idToDelete);
-    
+
     // If we deleted the last chat, create a brand new one automatically
     if (updatedSessions.length === 0) {
       const newSession = { id: Date.now(), name: 'New Conversation', messages: [initialWelcomeMessage] };
@@ -112,11 +112,11 @@ const CareerGuide = () => {
 
     const userMessage = { role: 'user', content: input };
     const currentInput = input;
-    
+
     // Automatically name the chat if it's the first user message
     const updatedName = activeSession.messages.length === 1 ? currentInput.substring(0, 25) + '...' : activeSession.name;
     const newMessages = [...activeSession.messages, userMessage];
-    
+
     updateSessionMessages(activeSessionId, newMessages, updatedName);
     setInput('');
     setLoading(true);
@@ -148,13 +148,13 @@ const CareerGuide = () => {
 
   return (
     <div className="fullscreen-chat" style={{ display: 'flex', flexDirection: 'row' }}>
-      
+
       {/* Sidebar: Chat History */}
       <div className="chat-sidebar desktop-only" style={{ width: '280px', backgroundColor: 'var(--bg-surface)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border-color)' }}>
-          <button 
-            onClick={handleNewChat} 
-            className="primary-btn" 
+          <button
+            onClick={handleNewChat}
+            className="primary-btn"
             style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
           >
             <span>+</span> New Conversation
@@ -165,25 +165,25 @@ const CareerGuide = () => {
             Saved Chats
           </p>
           {sessions.map(s => (
-            <div 
-              key={s.id} 
-              onClick={() => setActiveSessionId(s.id)} 
-              style={{ 
+            <div
+              key={s.id}
+              onClick={() => setActiveSessionId(s.id)}
+              style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '0.75rem 1rem', 
-                margin: '0.35rem 0', 
-                cursor: 'pointer', 
-                borderRadius: 'var(--radius-sm)', 
-                backgroundColor: activeSessionId === s.id ? 'var(--primary-light)' : 'transparent', 
+                padding: '0.75rem 1rem',
+                margin: '0.35rem 0',
+                cursor: 'pointer',
+                borderRadius: 'var(--radius-sm)',
+                backgroundColor: activeSessionId === s.id ? 'var(--primary-light)' : 'transparent',
                 border: activeSessionId === s.id ? '1px solid var(--border-focus)' : '1px solid transparent',
-                color: activeSessionId === s.id ? 'var(--primary-color)' : 'var(--text-secondary)', 
+                color: activeSessionId === s.id ? 'var(--primary-color)' : 'var(--text-secondary)',
                 transition: 'all 0.2s ease'
               }}
             >
-              <div style={{ 
-                fontWeight: activeSessionId === s.id ? '600' : '500', 
+              <div style={{
+                fontWeight: activeSessionId === s.id ? '600' : '500',
                 fontSize: '0.85rem',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
@@ -274,7 +274,52 @@ const CareerGuide = () => {
             <div key={idx} className={`message-row ${msg.role}`}>
               <div className={`message-bubble ${msg.role === 'ai' ? 'markdown-body' : ''}`}>
                 {msg.role === 'ai' ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      a: ({ node, href, children, ...props }) => {
+                        // FIXED: Intercept specific #add-roadmap: links and render an interactive button
+                        if (href && href.startsWith('#add-roadmap:')) {
+                          const courseName = decodeURIComponent(
+                            href.replace('#add-roadmap:', '')
+                          ).replace(/_/g, ' ');
+                          
+                          return (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (onEnroll) {
+                                  onEnroll(courseName);
+                                } else {
+                                  alert("Error: Roadmap enrollment is not connected to this component.");
+                                }
+                              }}
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.35rem',
+                                background: 'var(--primary-light, #ede9fe)',
+                                color: 'var(--primary-color, #7c3aed)',
+                                border: '1px solid var(--primary-color, #7c3aed)',
+                                borderRadius: '20px',
+                                padding: '0.35rem 0.85rem',
+                                fontSize: '0.85rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                margin: '0.4rem 0',
+                                transition: 'all 0.2s ease'
+                              }}
+                            >
+                              {children}
+                            </button>
+                          );
+                        }
+                        // Default rendering for standard links
+                        return <a href={href} target="_blank" rel="noreferrer" {...props}>{children}</a>;
+                      }
+                    }}
+                  >
                     {msg.content}
                   </ReactMarkdown>
                 ) : (
@@ -310,15 +355,15 @@ const CareerGuide = () => {
       {/* Mobile & Tablet Sessions Drawer */}
       {isMobileDrawerOpen && (
         <>
-          <div 
-            className="mobile-chat-backdrop" 
+          <div
+            className="mobile-chat-backdrop"
             onClick={() => setIsMobileDrawerOpen(false)}
             aria-hidden="true"
           />
           <div className="mobile-chat-drawer">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', borderBottom: '1px solid var(--border-color)' }}>
               <h3 style={{ fontSize: '1.1rem', margin: 0, color: 'var(--text-primary)', fontWeight: '800' }}>💬 Saved Chats</h3>
-              <button 
+              <button
                 onClick={() => setIsMobileDrawerOpen(false)}
                 style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.2rem' }}
               >
@@ -326,12 +371,12 @@ const CareerGuide = () => {
               </button>
             </div>
             <div style={{ padding: '1rem', flexShrink: 0 }}>
-              <button 
+              <button
                 onClick={() => {
                   handleNewChat();
                   setIsMobileDrawerOpen(false);
-                }} 
-                className="primary-btn" 
+                }}
+                className="primary-btn"
                 style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
               >
                 <span>+</span> New Conversation
@@ -342,28 +387,28 @@ const CareerGuide = () => {
                 All Conversations ({sessions.length})
               </p>
               {sessions.map(s => (
-                <div 
-                  key={s.id} 
+                <div
+                  key={s.id}
                   onClick={() => {
                     setActiveSessionId(s.id);
                     setIsMobileDrawerOpen(false);
-                  }} 
-                  style={{ 
+                  }}
+                  style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '0.75rem 1rem', 
-                    margin: '0.35rem 0', 
-                    cursor: 'pointer', 
-                    borderRadius: 'var(--radius-sm)', 
-                    backgroundColor: activeSessionId === s.id ? 'var(--primary-light)' : 'transparent', 
+                    padding: '0.75rem 1rem',
+                    margin: '0.35rem 0',
+                    cursor: 'pointer',
+                    borderRadius: 'var(--radius-sm)',
+                    backgroundColor: activeSessionId === s.id ? 'var(--primary-light)' : 'transparent',
                     border: activeSessionId === s.id ? '1px solid var(--border-focus)' : '1px solid transparent',
-                    color: activeSessionId === s.id ? 'var(--primary-color)' : 'var(--text-secondary)', 
+                    color: activeSessionId === s.id ? 'var(--primary-color)' : 'var(--text-secondary)',
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  <div style={{ 
-                    fontWeight: activeSessionId === s.id ? '600' : '500', 
+                  <div style={{
+                    fontWeight: activeSessionId === s.id ? '600' : '500',
                     fontSize: '0.85rem',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
