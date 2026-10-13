@@ -37,11 +37,10 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
         onClick={e => e.stopPropagation()} 
         style={{ 
           maxWidth: isLogin ? '420px' : '550px',
-          padding: 0, // Removed default padding to handle it internally
-          maxHeight: '90vh',
+          padding: 0,
           display: 'flex',
           flexDirection: 'column',
-          overflow: 'hidden' // Keeps the outer rounded corners perfectly intact
+          /* Do NOT set overflow:hidden here — it clips the scrollable body on mobile */
         }}
       >
         {/* FIXED HEADER */}
@@ -52,8 +51,8 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
           </h2>
         </div>
 
-        {/* SCROLLABLE BODY */}
-        <div style={{ overflowY: 'auto', padding: '0 clamp(1rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(1rem, 4vw, 2.5rem)' }}>
+        {/* SCROLLABLE BODY — flex: 1 + minHeight: 0 ensures it can actually scroll on iOS */}
+        <div style={{ overflowY: 'auto', flex: 1, minHeight: 0, padding: '0 clamp(1rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(1rem, 4vw, 2.5rem)', WebkitOverflowScrolling: 'touch' }}>
           {error && <div style={{ color: 'var(--danger-color)', marginBottom: '1rem', textAlign: 'center', fontWeight: 'bold' }}>{error}</div>}
 
           <form onSubmit={handleSubmit}>
