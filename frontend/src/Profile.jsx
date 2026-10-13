@@ -28,7 +28,7 @@ const Profile = ({ userEmail, userProfile, setUserProfile }) => {
     setSaving(true);
     setMessage('');
     try {
-      await axios.post('http://localhost:8000/api/profile', {
+      await axios.post('https://cep-pathguide-backend.onrender.com/api/profile', {
         email: userEmail,
         ...formData
       });
