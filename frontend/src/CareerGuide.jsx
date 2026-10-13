@@ -125,7 +125,7 @@ const CareerGuide = () => {
       // Pass chat history context to backend (exclude the current input from history payload)
       const historyPayload = activeSession.messages.map(m => ({ role: m.role, content: m.content }));
 
-      const response = await axios.post('http://localhost:8000/api/career-guidance', {
+      const response = await axios.post('https://cep-pathguide-backend.onrender.com/api/career-guidance', {
         prompt: currentInput,
         history: historyPayload
       });
