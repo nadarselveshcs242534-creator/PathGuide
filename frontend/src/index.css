@@ -1387,8 +1387,10 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  z-index: 1200; /* Must be above navbar (1000), mobile menu (1001), and chat drawer (1051) */
   padding: 1rem;
+  /* Allow scrolling the overlay itself when modal is taller than viewport (mobile keyboard) */
+  overflow-y: auto;
 }
 
 .modal-content {
@@ -1406,6 +1408,8 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(139, 92, 246, 0.3);
   animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
   overflow-y: auto;
+  /* Ensure modal doesn't shrink shorter than it needs to be */
+  flex-shrink: 0;
 }
 
 .close-btn {
@@ -2177,6 +2181,21 @@ h1, h2, h3, h4, h5, h6 {
   [data-theme="dark"] .mobile-chat-drawer {
     background-color: #120b24;
     background: linear-gradient(180deg, rgba(20, 14, 40, 0.98) 0%, rgba(13, 9, 28, 0.97) 100%);
+  }
+}
+
+/* MOBILE MODAL FIX: On phones the virtual keyboard shrinks the viewport.
+   Align modal to top + let overlay scroll, so the submit button is always reachable. */
+@media (max-width: 768px) {
+  .modal-overlay {
+    align-items: flex-start;
+    padding-top: clamp(3.5rem, 10vw, 5rem);
+    padding-bottom: 1.5rem;
+  }
+
+  .modal-content {
+    max-height: none; /* Let the overlay handle scrolling instead */
+    border-radius: var(--radius-md);
   }
 }
 
