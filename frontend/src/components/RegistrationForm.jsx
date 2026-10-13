@@ -69,8 +69,8 @@ const RegistrationForm = ({ userProfile, onEnroll, onSearchCompleted }) => {
     setLoading(true);
     try {
       const [schRes, crsRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/scholarships'),
-        axios.get('http://localhost:8000/api/courses')
+        axios.get('https://cep-pathguide-backend.onrender.com/api/scholarships'),
+        axios.get('https://cep-pathguide-backend.onrender.com/api/courses')
       ]);
       setScholarships(schRes.data.scholarships || []);
       setCourses(crsRes.data.courses || []);
